@@ -1,0 +1,1497 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Velvet Nail Studio POS</title>
+<style>
+:root{--accent:#c85d78;--accent-soft:#f7e7ec;--ink:#2d2427;--muted:#82767a;--line:#e9dfe2;--bg:#f7f4f5;--card:#fff;--danger:#b63f49;--ok:#2d8a62;--font-weight:400}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,"Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+#login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#faedf1,#fff)}
+.login-card{width:420px;max-width:92%;background:#fff;padding:34px;border-radius:24px;box-shadow:0 24px 70px #0002}
+.logo{width:72px;height:46px;border-radius:0;background:transparent;color:transparent;display:grid;place-items:center;font-weight:900;overflow:visible}
+.logo img{width:100%;height:100%;object-fit:contain;display:block}.login-card h1{margin:16px 0 4px}.muted{color:var(--muted);font-size:12px}
+.field{margin:13px 0}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.btn,.primary,.danger,.success{border:0;border-radius:9px;padding:10px 12px;font-weight:800}.btn{background:#f2eaed;color:var(--ink)}.primary{background:var(--accent);color:#fff}.danger{background:#fdecef;color:var(--danger)}.success{background:#e9f6ef;color:var(--ok)}
+#app{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:240px;background:#fff;border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;z-index:10}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 7px 20px}.brand .logo{width:78px;height:42px;border-radius:0;background:transparent}.brand b{display:block}.brand small{color:var(--muted)}
+.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;text-align:left;padding:11px;border-radius:10px;font-weight:800;color:#65595e}.nav button:hover,.nav button.active{background:var(--accent-soft);color:var(--accent)}
+.sidebar-bottom{margin-top:auto;display:grid;gap:6px}.main{margin-left:240px}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 24px;position:sticky;top:0;z-index:5}.topbar h2{margin:0}.content{padding:24px;max-width:1500px;margin:auto}
+.grid{display:grid;gap:15px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px}.stat-label{font-size:12px;color:var(--muted)}.stat{font-size:26px;font-weight:900;margin-top:6px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.toolbar h3{margin:0}.actions{display:flex;gap:8px;flex-wrap:wrap}.search{max-width:320px}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:720px;font-size:12px}.table th,.table td{padding:11px 9px;border-bottom:1px solid #f0e8ea;text-align:left}.table th{font-size:10px;color:var(--muted);text-transform:uppercase}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#f1eaec;font-size:10px;font-weight:800}.badge.ok{background:#e8f5ee;color:var(--ok)}.badge.bad{background:#fdecef;color:var(--danger)}
+.pos-layout{display:grid;grid-template-columns:minmax(0,1.4fr) 390px;gap:15px}.service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.service{border:1px solid var(--line);background:#fff;border-radius:12px;padding:14px;text-align:left}.service:hover{border-color:var(--accent)}.service b{display:block}.service small{display:block;color:var(--muted);margin:5px 0}.price{font-weight:900;color:var(--accent)}
+.cart-item{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid #eee}.qty{display:flex;gap:5px;align-items:center}.qty button{width:28px;height:28px;border:1px solid var(--line);background:#fff;border-radius:7px}.total-row{display:flex;justify-content:space-between;padding:6px 0}.grand{font-size:20px;font-weight:900;border-top:1px solid var(--line);margin-top:7px;padding-top:12px}
+.modal-bg{position:fixed;inset:0;background:#0006;display:grid;place-items:center;padding:20px;z-index:50}.modal{width:620px;max-width:96%;max-height:88vh;overflow:auto;background:#fff;border-radius:16px;padding:20px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.empty{text-align:center;color:var(--muted);padding:28px}
+.logo-preview{height:110px;border:1px dashed #d8cdd0;border-radius:12px;display:grid;place-items:center;background:#fbf8f9;overflow:hidden}.logo-preview img{max-width:90%;max-height:95px}
+.theme{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px #ccc}.theme.active{box-shadow:0 0 0 2px #222}
+
+.category-columns{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.category-panel{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fcfafb;min-height:210px}
+.category-panel h3{margin:0 0 12px;font-size:16px}
+.category-panel .service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.other-panel{margin-top:16px;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.other-panel .service-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.custom-panel{margin-top:16px;border:1px solid var(--line);border-radius:14px;padding:16px;background:#fbf8f9}
+.custom-row{display:grid;grid-template-columns:1.6fr .8fr auto;gap:10px;align-items:end}
+.dashboard-stat{cursor:pointer;transition:.15s}
+.dashboard-stat:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 8px 22px #0000000d}
+@media(max-width:900px){.category-columns{grid-template-columns:1fr}.category-panel .service-grid,.other-panel .service-grid{grid-template-columns:repeat(2,1fr)}.custom-row{grid-template-columns:1fr}}
+
+@media(max-width:1000px){.sidebar{width:200px}.main{margin-left:200px}.g4{grid-template-columns:1fr 1fr}.pos-layout{grid-template-columns:1fr}.service-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.sidebar{position:static;width:100%;height:auto}.nav{grid-template-columns:repeat(5,1fr);overflow:auto}.main{margin-left:0}.content{padding:15px}.g4,.g3,.g2{grid-template-columns:1fr}.service-grid{grid-template-columns:1fr}.topbar{padding:0 14px}}
+
+/* 字体设置：只控制字体颜色与粗细 */
+body,button,input,select,textarea,.nav button,.field label,.btn,.primary,.danger,.success,.stat,.table th,.badge,.price{font-weight:var(--font-weight)!important}
+</style>
+
+<style id="sidebar-balance-only">
+:root{--sidebar-beige:#f7f0e6}
+.sidebar{
+  background:var(--sidebar-beige)!important;
+}
+.brand{
+  min-height:84px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  padding:10px 8px 18px!important;
+}
+.brand .logo{
+  width:62px!important;
+  height:62px!important;
+  min-width:62px!important;
+  border-radius:50%!important;
+  border:none!important;
+  outline:none!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.brand .logo img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  border-radius:50%!important;
+  border:none!important;
+  display:block!important;
+}
+.brand > div:last-child{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  min-width:0!important;
+  line-height:1.25!important;
+}
+.brand b{margin:0!important;line-height:1.25!important}
+.brand small{margin-top:3px!important;line-height:1.2!important}
+</style>
+
+<style id="panel-logo-settings-addon">
+:root{--panel-color:#f7f0e6}
+.sidebar{background:var(--panel-color)!important}
+.logo-preview{background:var(--panel-color)!important;border:1px dashed var(--line)!important}
+</style>
+
+
+<style id="left-logo-right-actions-only">
+.brand{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:12px!important;
+}
+.brand .logo{
+  width:58px!important;
+  height:58px!important;
+  min-width:58px!important;
+  border-radius:50%!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:none!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
+.brand .logo img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  border-radius:50%!important;
+  display:block!important;
+}
+.brand > div:last-child{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  min-width:0!important;
+}
+.toolbar{
+  display:flex!important;
+  align-items:center!important;
+}
+.toolbar > .actions,
+.toolbar > button:last-child,
+.toolbar > .primary:last-child{
+  margin-left:auto!important;
+}
+</style>
+
+
+<style id="safe-login-lang-style">
+#loginLogo{
+  width:64px!important;height:64px!important;border-radius:50%!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  background:color-mix(in srgb,var(--accent) 12%,white)!important;
+  border:none!important;box-shadow:none!important;overflow:hidden!important;
+}
+#loginLogo img{
+  width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important;
+}
+.lang-switch-safe{
+  display:inline-flex;gap:4px;padding:4px;border:1px solid var(--line);
+  border-radius:999px;background:#fff;margin-left:auto;
+}
+.lang-switch-safe button{
+  border:0;background:transparent;border-radius:999px;padding:7px 11px;
+  cursor:pointer;font-size:12px;font-weight:600;
+}
+.lang-switch-safe button.active{background:var(--accent);color:#fff}
+</style>
+
+
+<style id="remove-top-new-sale-button">
+/* 只隐藏页面顶部 toolbar / topbar 的开新单按钮 */
+.topbar [data-page="pos"],
+.toolbar > [data-page="pos"]{
+  display:none!important;
+}
+</style>
+
+
+
+
+
+<style id="button-layout-final">
+.dashboard-sales-head{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%}.customer-actions,.service-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.customer-actions .search,.service-actions .search{flex:1;min-width:220px}
+.action-dark{border:0;border-radius:10px;padding:10px 14px;background:#1f2a3a;color:#fff!important;font-weight:700;cursor:pointer;white-space:nowrap}
+</style>
+
+<style id="dashboard-new-sale-far-right">
+.dashboard-sales-head{
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+}
+#dashboardNewSaleBtn{
+  margin-left:auto!important;
+  flex:0 0 auto!important;
+}
+</style>
+
+
+<style id="sales-export-bottom-style">
+.sales-export-bottom{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  width:100%;
+  margin-top:14px;
+}
+.sales-export-bottom #exportCsvBtn{
+  margin-left:auto;
+}
+</style>
+
+
+<style id="settings-two-column-eye-style">
+.settings-two-col{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:18px;
+  align-items:start;
+}
+.settings-left,.settings-right{
+  display:grid;
+  gap:14px;
+}
+.password-wrap{
+  position:relative;
+}
+.password-wrap input{
+  padding-right:46px!important;
+}
+.password-eye{
+  position:absolute;
+  right:8px;
+  top:50%;
+  transform:translateY(-50%);
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  font-size:16px;
+  color:var(--font-color,#000);
+}
+.password-eye:hover{
+  background:color-mix(in srgb,var(--accent) 10%,transparent);
+}
+@media(max-width:850px){
+  .settings-two-col{grid-template-columns:1fr}
+}
+</style>
+
+<style id="figure-2-template-lock">
+/* 图2 desktop template */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+#app{width:100%;max-width:100%}
+.sidebar{width:236px}
+.main{margin-left:236px;width:calc(100% - 236px);min-width:0}
+.content{width:100%;max-width:1500px;min-width:0}
+.pos-layout{grid-template-columns:minmax(0,1fr) 390px;min-width:0}
+.pos-layout>*{min-width:0}
+.card,.category-panel,.other-panel,.custom-panel{min-width:0}
+.lang-switch-safe{display:inline-flex!important;visibility:visible!important}
+.menu-toggle-settings{width:100%;margin:0;padding-top:12px;border-top:1px solid var(--line)}
+.menu-toggle-heading{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:9px}
+.menu-toggle-heading h3{margin:0;font-size:15px}
+.menu-toggle-heading .muted{font-size:11px;text-align:right}
+.menu-toggle-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px}
+.menu-toggle-item{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:12px}
+.menu-switch{position:relative;width:54px;height:26px;flex:0 0 54px;padding:0;border:0;border-radius:999px;background:#c9cbd1;color:#fff;cursor:pointer;transition:background .16s ease;box-shadow:none}
+.menu-switch::before{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .16s ease;box-shadow:0 1px 3px #0003}
+.menu-switch[aria-pressed="true"]{background:var(--accent)}
+.menu-switch[aria-pressed="true"]::before{transform:translateX(28px)}
+.menu-switch .switch-text{position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;line-height:1}
+.menu-switch[aria-pressed="true"] .switch-text{right:auto;left:7px}
+
+/* Smaller laptop / iPad landscape: keep the same design, stack the order panel safely */
+@media (min-width:1001px) and (max-width:1250px){
+  .sidebar{width:200px}
+  .main{margin-left:200px;width:calc(100% - 200px)}
+  .content{padding:16px}
+  .pos-layout{grid-template-columns:minmax(0,1fr)}
+  .service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media (max-width:1000px){
+  .main{width:calc(100% - 200px)}
+}
+
+@media (max-width:720px){
+  .sidebar{width:100%}
+  .main{width:100%;margin-left:0}
+  .topbar{height:auto;min-height:64px;gap:8px;flex-wrap:wrap}
+  .lang-switch-safe{margin-left:auto}
+  .nav button{white-space:nowrap}
+  .content{width:100%;max-width:100%}
+  .menu-toggle-settings{width:100%}
+  .menu-toggle-heading{align-items:flex-start;flex-direction:column}
+  .menu-toggle-heading .muted{text-align:left}
+  .menu-toggle-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* Final responsive safety layer: laptop, iPad and phone */
+html{-webkit-text-size-adjust:100%}
+img,svg{max-width:100%}
+.card,.field,.toolbar,.actions,.table-wrap,.settings-two-col,.settings-left,.settings-right{min-width:0}
+.table-wrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.modal{width:min(620px,calc(100vw - 28px))}
+
+@media (max-width:1000px){
+  .toolbar{flex-wrap:wrap;align-items:flex-start!important}
+  .toolbar>.actions{max-width:100%}
+  .search{max-width:100%}
+}
+
+@media (max-width:720px){
+  .sidebar{position:static;inset:auto;height:auto;min-height:0;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line)}
+  .brand{min-height:58px!important;padding:2px 4px 8px!important}
+  .brand .logo{width:48px!important;height:48px!important;min-width:48px!important}
+  .nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;overflow:visible}
+  .nav button{min-width:0;padding:9px 7px;text-align:center;white-space:normal;overflow-wrap:anywhere;font-size:12px;line-height:1.25}
+  .sidebar-bottom{grid-template-columns:1fr;margin-top:8px}
+  .sidebar-bottom button{width:100%}
+  .topbar{position:sticky;top:0;padding:9px 12px;min-width:0}
+  .topbar h2{font-size:20px;min-width:0;overflow-wrap:anywhere}
+  .content{padding:12px}
+  .card{padding:13px;border-radius:12px}
+  .toolbar{gap:8px}
+  .toolbar>.actions{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto}
+  .toolbar>.actions .search{width:100%;min-width:0}
+  .pos-layout{gap:12px}
+  .category-panel,.other-panel,.custom-panel{padding:11px}
+  .category-panel .service-grid,.other-panel .service-grid{grid-template-columns:1fr}
+  .service{padding:12px}
+  input,select,textarea{font-size:16px}
+  .modal-bg{padding:10px;align-items:center}
+  .modal{max-width:none;max-height:calc(100dvh - 20px);padding:15px;border-radius:13px}
+  .modal .g2,.modal .g3,.modal .g4{grid-template-columns:1fr}
+  .modal-actions{position:sticky;bottom:-15px;background:#fff;padding:10px 0 0;flex-wrap:wrap}
+}
+
+@media (max-width:480px){
+  .nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lang-switch-safe button{padding:6px 8px;font-size:11px}
+  .toolbar>.actions{grid-template-columns:1fr}
+  .toolbar>.actions>*{width:100%;max-width:100%}
+  .actions .btn,.actions .primary,.actions .danger,.actions .success{flex:1 1 auto}
+  .menu-toggle-list{grid-template-columns:1fr}
+  .custom-row{grid-template-columns:1fr}
+  .stat{font-size:22px}
+}
+
+/* Desktop / iPad workspace scrolling: keep the page fixed and scroll only data areas */
+@media (min-width:721px){
+  html,body{height:100%;overflow:hidden}
+  #app:not(.hidden){height:100dvh;overflow:hidden}
+  .sidebar{height:100dvh;overflow:hidden}
+  .sidebar .nav{min-height:0;overflow-y:auto;overscroll-behavior:contain}
+  .main{height:100dvh;overflow:hidden}
+  .content{height:calc(100dvh - 72px);max-height:calc(100dvh - 72px);overflow-y:auto;overscroll-behavior:contain}
+
+  body[data-pos-page="pos"] .content,
+  body[data-pos-page="appointments"] .content,
+  body[data-pos-page="customers"] .content,
+  body[data-pos-page="services"] .content,
+  body[data-pos-page="reports"] .content,
+  body[data-pos-page="settings"] .content{overflow:hidden}
+
+  body[data-pos-page="pos"] .pos-layout{height:100%;min-height:0}
+  body[data-pos-page="pos"] .pos-layout>.card{height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+  body[data-pos-page="pos"] #cartItems{max-height:30vh;overflow-y:auto;overscroll-behavior:contain}
+
+  body[data-pos-page="appointments"] #content>.card,
+  body[data-pos-page="customers"] #content>.card,
+  body[data-pos-page="services"] #content>.card{height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+  body[data-pos-page="appointments"] #content>.card>.table-wrap,
+  body[data-pos-page="customers"] #content>.card>.table-wrap,
+  body[data-pos-page="services"] #content>.card>.table-wrap{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}
+
+  body[data-pos-page="reports"] #content{display:flex;flex-direction:column;min-height:0}
+  body[data-pos-page="reports"] #content>.grid{flex:0 0 auto}
+  body[data-pos-page="reports"] #content>.card{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+  body[data-pos-page="reports"] #salesReportTable{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}
+
+  body[data-pos-page="settings"] #content>.card{height:100%;min-height:0;overflow:hidden}
+  body[data-pos-page="settings"] .settings-two-col{height:calc(100% - 34px);min-height:0;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+  body[data-pos-page="settings"] .settings-left,
+  body[data-pos-page="settings"] .settings-right{align-content:start;gap:9px;min-height:0}
+  body[data-pos-page="settings"] .field{margin:7px 0}
+  body[data-pos-page="settings"] .logo-preview{height:82px}
+}
+
+@media (min-width:721px) and (max-width:1000px){
+  body[data-pos-page="pos"] .pos-layout{grid-template-rows:minmax(0,1fr) minmax(0,1fr)}
+}
+</style>
+</head>
+
+<body>
+<section id="login">
+  <div class="login-card">
+    <div id="loginLogo" class="logo">VN</div>
+    <h1 id="loginShop">Velvet Nail Studio</h1>
+    <p class="muted">美甲店 POS</p>
+    <div class="field"><label>账号</label><input id="loginUser" value="admin"></div>
+    <div class="field"><label>密码</label><div class="password-wrap"><input id="loginPass" type="password" value="admin123"><button type="button" id="loginScreenPasswordEye" class="password-eye" aria-label="查看密码" title="查看密码">👁</button></div></div>
+    <button id="loginBtn" class="primary" style="width:100%">登入</button>
+    <div id="loginError" style="color:#b63f49;font-size:12px;margin-top:8px"></div>
+  </div>
+</section>
+
+<section id="app" class="hidden">
+  <aside class="sidebar">
+    <div class="brand"><div id="brandLogo" class="logo">VN</div><div><b id="brandName">Velvet Nail Studio</b><small>POS System</small></div></div>
+    <nav class="nav">
+      <button type="button" data-page="dashboard">⌂ 首页</button>
+      <button type="button" data-page="pos">▣ 收银</button>
+      <button type="button" data-page="appointments">◷ 预约</button>
+      <button type="button" data-page="customers">♙ 顾客</button>
+      <button type="button" data-page="services">✦ 服务</button>
+      <button type="button" data-page="staff">♙ 员工与佣金</button>
+      
+      <button type="button" data-page="membership">◇ 会员</button>
+      <button type="button" data-page="reports">▥ 销售报表</button>
+      <button type="button" data-page="settings">⚙ 设置</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="danger">退出</button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><h2 id="pageTitle">首页</h2><button type="button" class="primary" data-page="pos">+ 开新单</button></header>
+    <div id="content" class="content"></div>
+  </main>
+</section>
+
+<div id="modalRoot"></div>
+<div id="toast" class="hidden" style="position:fixed;right:20px;bottom:20px;background:#2d2427;color:#fff;padding:12px 15px;border-radius:10px;z-index:100"></div>
+
+<script>
+const KEY="velvet_nail_pos_v14";
+const seed={
+ settings:{shop:"Velvet Nail Studio",color:"#c85d78",fontColor:"#000000",fontWeight:"400",logo:"",username:"admin",password:"admin123"},
+ services:[
+  {id:"s1",name:"Classic Manicure",category:"Manicure",duration:45,price:35},
+  {id:"s2",name:"Gel Manicure",category:"Manicure",duration:60,price:60},
+  {id:"s3",name:"Classic Pedicure",category:"Pedicure",duration:50,price:45},
+  {id:"s4",name:"Gel Pedicure",category:"Pedicure",duration:70,price:70},
+  {id:"s5",name:"Nail Art",category:"Add-on",duration:30,price:25},
+  {id:"s6",name:"Removal",category:"Add-on",duration:20,price:15}
+ ],
+ customers:[
+  {id:"c1",name:"Alicia Tan",phone:"012-3456789",email:"",member:"Gold",visits:0,spend:0},
+  {id:"c2",name:"Sarah Lim",phone:"017-8881234",email:"",member:"Silver",visits:0,spend:0}
+ ],
+ staff:[{id:"st1",name:"Main Staff",role:"Nail Artist",commission:10,active:true}],
+ memberships:[{id:"m1",name:"Silver",price:99,discount:5},{id:"m2",name:"Gold",price:199,discount:10}],
+ appointments:[],sales:[],cart:[]
+};
+let remoteSaveTimer=null,remoteSyncInProgress=false,remoteSaveQueued=false;
+let db=load();
+const MENU_DEFAULTS={appointments:true,customers:true,services:true,staff:true,membership:true,reports:true};
+db.settings.menuVisibility={...MENU_DEFAULTS,...(db.settings.menuVisibility||{})};
+if(!Number.isFinite(Number(db.settings.autoLogoutMinutes))||Number(db.settings.autoLogoutMinutes)<1)db.settings.autoLogoutMinutes=3;
+if(typeof db.settings.googleAppsScriptUrl!=="string")db.settings.googleAppsScriptUrl="";
+if(typeof db.settings.databaseKey!=="string")db.settings.databaseKey="";
+if(!db.settings.panelColor)db.settings.panelColor="#f7f0e6";
+if(!db.settings.logoClearedV1){db.settings.logo="";db.settings.logoClearedV1=true;save();}if(!db.settings.logo){db.settings.logo='data:image/png;base64,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';save();}let page="dashboard",searchState={pos:"",customers:"",services:""},discMode="percent",discAmount=0;
+
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||structuredClone(seed)}catch(e){return structuredClone(seed)}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));scheduleRemoteSave()}
+function getDatabaseUrl(){return String(db.settings.googleAppsScriptUrl||"").trim()}
+function getDatabaseKey(){return String(db.settings.databaseKey||"").trim()}
+function scheduleRemoteSave(){if(!getDatabaseUrl()||!getDatabaseKey())return;if(remoteSyncInProgress){remoteSaveQueued=true;return;}clearTimeout(remoteSaveTimer);remoteSaveTimer=setTimeout(syncToDatabase,900)}
+function databasePayload(){const copy=JSON.parse(JSON.stringify(db));if(copy.settings){delete copy.settings.googleAppsScriptUrl;delete copy.settings.databaseKey}return copy}
+async function databaseRequest(action,payload,urlOverride,keyOverride){const url=String(urlOverride||getDatabaseUrl()).trim(),apiKey=String(keyOverride||getDatabaseKey()).trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec(?:\?.*)?$/.test(url))throw new Error("Web App URL 不正确");const response=await fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action,apiKey,payload:payload||null})});if(!response.ok)throw new Error("HTTP "+response.status);const result=await response.json();if(!result.ok)throw new Error(result.error||"Database error");return result}
+async function syncToDatabase(){if(remoteSyncInProgress)return;remoteSyncInProgress=true;clearTimeout(remoteSaveTimer);try{await databaseRequest("save",databasePayload())}catch(error){console.warn("Google Sheet save failed:",error)}finally{remoteSyncInProgress=false;if(remoteSaveQueued){remoteSaveQueued=false;scheduleRemoteSave()}}}
+async function syncFromDatabase(showMessage=false){if(remoteSyncInProgress)return;remoteSyncInProgress=true;const localUrl=getDatabaseUrl(),localKey=getDatabaseKey();try{const result=await databaseRequest("load");if(result.data&&typeof result.data==="object"){db={...structuredClone(seed),...result.data,settings:{...structuredClone(seed.settings),...(result.data.settings||{}),googleAppsScriptUrl:localUrl,databaseKey:localKey}};db.settings.menuVisibility={...MENU_DEFAULTS,...(db.settings.menuVisibility||{})};localStorage.setItem(KEY,JSON.stringify(db));render();if(showMessage)toast("Google Sheet 资料已载入")}else{remoteSyncInProgress=false;await syncToDatabase();remoteSyncInProgress=true;if(showMessage)toast("Google Sheet 已连接并建立资料")}}catch(error){console.warn("Google Sheet load failed:",error);if(showMessage)toast("连接失败："+error.message)}finally{remoteSyncInProgress=false;if(remoteSaveQueued){remoteSaveQueued=false;scheduleRemoteSave()}}}
+function $(q){return document.querySelector(q)} function $$(q){return [...document.querySelectorAll(q)]}
+function money(n){return "RM "+Number(n||0).toFixed(2)}
+function uid(p){return p+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function today(){return new Date().toISOString().slice(0,10)}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.remove("hidden");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.add("hidden"),1800)}
+function login(){
+  const username=$("#loginUser").value.trim();
+  const password=$("#loginPass").value;
+  if(username===(db.settings.username||"admin") && password===(db.settings.password||"admin123")){
+    $("#login").classList.add("hidden");
+    $("#app").classList.remove("hidden");
+    $("#loginError").textContent="";
+    render();
+  }else{
+    $("#loginError").textContent="账号或密码不对";
+  }
+}
+function logout(){$("#app").classList.add("hidden");$("#login").classList.remove("hidden")}
+function go(p){page=p;render();window.scrollTo(0,0)}
+function applyBrand(){document.documentElement.style.setProperty("--accent",db.settings.color||"#c85d78");
+  document.documentElement.style.setProperty("--panel-color",db.settings.panelColor||"#f7f0e6");document.documentElement.style.setProperty("--accent-soft",(db.settings.color||"#c85d78")+"20");document.documentElement.style.setProperty("--ink",db.settings.fontColor||"#000000");document.documentElement.style.setProperty("--font-weight",db.settings.fontWeight||"400");$("#brandName").textContent=db.settings.shop;$("#loginShop").textContent=db.settings.shop;["brandLogo","loginLogo"].forEach(id=>{const el=$("#"+id);if(el)el.innerHTML=db.settings.logo?`<img src="${db.settings.logo}">`:"VN"})}
+function applyMenuVisibility(){const visibility=db.settings.menuVisibility||MENU_DEFAULTS;["appointments","customers","services","staff","membership","reports"].forEach(key=>{$$(`.nav [data-page="${key}"]`).forEach(btn=>btn.style.display=visibility[key]===false?"none":"")})}
+function render(){document.body.dataset.posPage=page;applyBrand();$$("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));$("#pageTitle").textContent={dashboard:"首页",pos:"收银",appointments:"预约",customers:"顾客",services:"服务",staff:"员工与佣金",membership:"会员",reports:"销售报表",settings:"设置"}[page];$("#content").innerHTML=pages[page]();bindPage();applyMenuVisibility()}
+
+const pages={
+dashboard(){const todays=db.sales.filter(s=>s.date===today()),rev=todays.reduce((a,s)=>a+s.total,0);return `<div class="grid g4">
+  <div class="card dashboard-stat" data-summary="todaySales"><div class="stat-label">今天销售额</div><div class="stat">${money(rev)}</div><div class="muted">点击查看今天销售记录</div></div>
+  <div class="card dashboard-stat" data-summary="todayTransactions"><div class="stat-label">今天单数</div><div class="stat">${todays.length}</div><div class="muted">点击查看今天交易</div></div>
+  <div class="card dashboard-stat" data-summary="customers"><div class="stat-label">顾客人数</div><div class="stat">${db.customers.length}</div><div class="muted">点击查看顾客名单</div></div>
+  <div class="card dashboard-stat" data-summary="todayAppointments"><div class="stat-label">今天预约</div><div class="stat">${db.appointments.filter(a=>a.date===today()).length}</div><div class="muted">点击查看今天预约</div></div>
+</div>
+<div class="card" style="margin-top:15px">
+  <div class="toolbar"><h3>最近销售记录</h3><button class="primary" type="button" data-page="pos">+ 开新单</button></div>
+  ${salesTable(db.sales.slice(-8).reverse())}
+</div>`},
+pos(){return `<div class="pos-layout">
+<div class="card">
+  <div class="toolbar">
+    <h3>服务</h3>
+    <input id="posSearch" class="search" placeholder="搜索服务" value="${esc(searchState.pos)}">
+  </div>
+
+  <div class="category-columns">
+    <div class="category-panel">
+      <h3>Manicure 手部</h3>
+      <div id="manicureGrid" class="service-grid">
+        ${serviceCards(db.services.filter(x=>isManicure(x)&&(x.name+" "+x.category).toLowerCase().includes(searchState.pos.toLowerCase())))}
+      </div>
+    </div>
+
+    <div class="category-panel">
+      <h3>Pedicure 脚部</h3>
+      <div id="pedicureGrid" class="service-grid">
+        ${serviceCards(db.services.filter(x=>isPedicure(x)&&(x.name+" "+x.category).toLowerCase().includes(searchState.pos.toLowerCase())))}
+      </div>
+    </div>
+  </div>
+
+  <div class="other-panel">
+    <h3>其他服务</h3>
+    <div id="otherServiceGrid" class="service-grid">
+      ${serviceCards(db.services.filter(x=>!isManicure(x)&&!isPedicure(x)&&(x.name+" "+x.category).toLowerCase().includes(searchState.pos.toLowerCase())))}
+    </div>
+  </div>
+
+  <div class="custom-panel">
+    <div class="toolbar"><h3>临时项目</h3></div>
+    <div class="custom-row">
+      <div class="field" style="margin:0"><label>服务名称</label><input id="customServiceName" placeholder="例如：临时补甲 / 特别服务"></div>
+      <div class="field" style="margin:0"><label>价钱</label><input id="customServicePrice" type="number" min="0" step=".01" placeholder="RM"></div>
+      <button type="button" id="addCustomServiceBtn" class="primary">加入订单</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="toolbar"><h3>订单</h3><button id="clearCartBtn" class="btn" type="button">清除</button></div>
+  <div id="cartItems">${cartHtml()}</div>
+  <div class="field"><label>顾客</label><input id="customerPicker" list="customerList" placeholder="搜索顾客名字或电话"><datalist id="customerList">${db.customers.map(c=>`<option value="${esc(c.name)} — ${esc(c.phone)}"></option>`).join("")}</datalist></div>
+  <div class="field"><label>员工</label><select id="staffPicker">${db.staff.filter(s=>s.active).map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("")}</select></div>
+  <div class="field"><label>折扣</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><select id="discMode"><option value="percent">百分比 %</option><option value="fixed">固定 RM</option></select><input id="discAmount" type="number" min="0" step=".01" value="${discAmount}"></div></div>
+  <div class="field"><label>付款</label><select id="payment"><option>现金</option><option>刷卡</option><option>QR Pay</option><option>电子钱包</option></select></div>
+  <div id="totals">${totalsHtml()}</div>
+  <button id="checkoutBtn" class="primary" style="width:100%;margin-top:12px">完成收款</button>
+</div>
+</div>`},
+appointments(){return `<div class="card"><div class="toolbar"><h3>预约</h3><button id="addApptBtn" class="primary">+ 加预约</button></div><div class="table-wrap"><table class="table"><thead><tr><th>日期</th><th>时间</th><th>顾客</th><th>服务</th><th>员工</th><th>状态</th><th></th></tr></thead><tbody>${db.appointments.map(a=>`<tr><td>${a.date}</td><td>${a.time}</td><td>${esc(db.customers.find(c=>c.id===a.customerId)?.name||"散客")}</td><td>${esc(db.services.find(s=>s.id===a.serviceId)?.name||"-")}</td><td>${esc(db.staff.find(s=>s.id===a.staffId)?.name||"-")}</td><td>${esc(a.status||"已预约")}</td><td><button class="btn" onclick="editAppt('${a.id}')">编辑</button> <button class="danger" onclick="deleteRecord('appointments','${a.id}')">删除</button></td></tr>`).join("")||`<tr><td colspan="6" class="empty">暂无数据</td></tr>`}</tbody></table></div></div>`},
+customers(){const rows=db.customers.filter(c=>(c.name+" "+c.phone+" "+(c.history||[]).map(h=>h.service+" "+h.artist+" "+h.date).join(" ")).toLowerCase().includes(searchState.customers.toLowerCase()));return `<div class="card"><div class="toolbar"><h3>顾客</h3><div class="actions"><input id="customerSearch" class="search" placeholder="搜索顾客" value="${esc(searchState.customers)}"><button id="addCustomerBtn" class="primary">+ 加顾客</button></div></div><div class="table-wrap"><table class="table"><thead><tr><th>名字</th><th>电话</th><th>最近光顾</th><th>到店次数</th><th>消费金额</th><th></th></tr></thead><tbody id="customerRows">${customerRows(rows)}</tbody></table></div></div>`},
+services(){const rows=db.services.filter(x=>(x.name+" "+x.category).toLowerCase().includes(searchState.services.toLowerCase()));return `<div class="card"><div class="toolbar"><h3>服务</h3><div class="actions"><input id="serviceSearch" class="search" placeholder="搜索服务" value="${esc(searchState.services)}"><button id="addServiceBtn" class="primary">+ 加服务</button></div></div><div class="table-wrap"><table class="table"><thead><tr><th>服务</th><th>分类</th><th>价钱</th><th></th></tr></thead><tbody id="serviceRows">${serviceRows(rows)}</tbody></table></div></div>`},
+staff(){return `<div class="card"><div class="toolbar"><h3>员工与佣金</h3><button id="addStaffBtn" class="primary">+ 加员工</button></div><div class="table-wrap"><table class="table"><thead><tr><th>名字</th><th>职位</th><th>佣金</th><th>状态</th><th></th></tr></thead><tbody>${db.staff.map(s=>`<tr><td>${esc(s.name)}</td><td>${esc(s.role)}</td><td>${s.commission}%</td><td><span class="badge ${s.active?"ok":"bad"}">${s.active?"使用中":"已停用"}</span></td><td><button class="btn" onclick="editStaff('${s.id}')">编辑</button> <button class="danger" onclick="deleteRecord('staff','${s.id}')">删除</button></td></tr>`).join("")}</tbody></table></div></div>`},
+membership(){return `<div class="card"><div class="toolbar"><h3>会员</h3><button id="addMembershipBtn" class="primary">+ 加会员配套</button></div><div class="table-wrap"><table class="table"><thead><tr><th>配套</th><th>价钱</th><th>折扣</th><th></th></tr></thead><tbody>${db.memberships.map(m=>`<tr><td>${esc(m.name)}</td><td>${money(m.price)}</td><td>${m.discount}%</td><td><button class="btn" onclick="editMembership('${m.id}')">编辑</button> <button class="danger" onclick="deleteRecord('memberships','${m.id}')">删除</button></td></tr>`).join("")}</tbody></table></div></div>`},
+reports(){const rev=db.sales.reduce((a,s)=>a+s.total,0);return `<div class="grid g4"><div class="card"><div class="stat-label">总销售</div><div class="stat">${money(rev)}</div></div><div class="card"><div class="stat-label">单数</div><div class="stat">${db.sales.length}</div></div><div class="card"><div class="stat-label">平均每单</div><div class="stat">${money(db.sales.length?rev/db.sales.length:0)}</div></div><div class="card"><div class="stat-label">顾客人数</div><div class="stat">${db.customers.length}</div></div></div><div class="card" style="margin-top:15px"><div class="toolbar">
+  <h3>销售记录</h3>
+  <div class="actions" style="margin-left:auto">
+    <input id="salesSearch" class="search" placeholder="搜索顾客销售记录">
+    
+  </div>
+</div><div id="salesReportTable">${salesTable(db.sales.slice().reverse())}</div>
+<div class="sales-export-bottom">
+  <button id="exportCsvBtn" class="btn">导出 Excel/CSV</button>
+</div></div>`},
+settings(){return `<div class="grid g2">
+
+</div>
+<div class="card">
+  <h3>店设置</h3>
+  <div class="field"><label>店名</label><input id="shopName" value="${esc(db.settings.shop)}"></div>
+  <div class="field"><label>登入账号</label><input id="loginUsernameSetting" value="${esc(db.settings.username||"admin")}"></div>
+  <div class="field"><label>登入密码</label><input id="loginPasswordSetting" type="password" value="${esc(db.settings.password||"admin123")}"></div>
+  <div class="field"><label>自动退出时间（分钟）</label><input id="autoLogoutMinutes" type="number" min="1" max="120" step="1" value="${Math.max(1,Math.min(120,Number(db.settings.autoLogoutMinutes)||3))}"><div class="muted" style="margin-top:5px">没有操作超过此时间后需要重新登入</div></div>
+  <div class="field"><label>Google Sheet Database</label><button type="button" id="databaseSettingsBtn" class="btn" style="width:100%">${getDatabaseUrl()?"已连接 · 调整设置":"连接 Google Sheet"}</button></div>
+  <div class="field"><label>主题颜色</label><div class="actions">${["#c85d78","#d99aa8","#e7c4b0","#d8c3a5","#cdb79e","#f1e5d2","#b9a38c","#8b5cf6","#a78bfa","#3b82f6","#60a5fa","#10b981","#6fcf97","#f59e0b","#ef4444","#1f2937"].map(c=>`<button class="theme ${db.settings.color===c?"active":""}" data-color="${c}" style="background:${c}" title="${c}"></button>`).join("")}</div>
+  <div class="field" style="margin-top:10px">
+    <label>自选颜色</label>
+    <div style="display:grid;grid-template-columns:56px 1fr;gap:10px;align-items:center">
+      <input id="customColorPicker" type="color" value="${esc(db.settings.color||"#c85d78")}" style="height:42px;padding:3px">
+      <input id="customColorHex" value="${esc(db.settings.color||"#c85d78")}" placeholder="#c85d78">
+    </div>
+  </div>
+</div>
+  <div class="field">
+  <label>版面背景颜色</label>
+  <div style="display:grid;grid-template-columns:56px 1fr;gap:10px;align-items:center">
+    <input id="panelColorPicker" type="color" value="${esc(db.settings.panelColor||"#f7f0e6")}" style="height:42px;padding:3px">
+    <input id="panelColorHex" value="${esc(db.settings.panelColor||"#f7f0e6")}" placeholder="#f7f0e6">
+  </div>
+</div>
+  <div class="field"><label>字体颜色</label><div style="display:grid;grid-template-columns:56px 1fr;gap:10px;align-items:center"><input id="fontColorPicker" type="color" value="${esc(db.settings.fontColor||"#000000")}" style="height:42px;padding:3px"><input id="fontColorHex" value="${esc(db.settings.fontColor||"#000000")}" placeholder="#000000"></div></div>
+  <div class="field"><label>字体粗细</label><select id="fontWeightSetting"><option value="400" ${(db.settings.fontWeight||"400")==="400"?"selected":""}>正常</option><option value="700" ${db.settings.fontWeight==="700"?"selected":""}>加粗 Bold</option></select></div>
+  <div class="field"><label>店 Logo</label>
+  <div class="logo-preview">${db.settings.logo?`<img src="${db.settings.logo}">`:"添加 Logo"}</div>
+  <input id="logoFile" type="file" accept="image/*">
+  ${db.settings.logo?`<button type="button" id="removeLogoBtn" class="btn" style="margin-top:8px">移除 Logo</button>`:""}
+</div>
+  <button id="saveSettingsBtn" class="primary">保存</button>
+  <div class="menu-toggle-settings">
+    <div class="menu-toggle-heading"><h3>Menu 开关</h3><div class="muted">关闭只隐藏 Menu，不会删除资料。</div></div>
+    <div class="menu-toggle-list">
+      ${[["appointments","预约"],["customers","顾客"],["services","服务"],["staff","员工与佣金"],["membership","会员"],["reports","销售报表"]].map(([key,label])=>{const on=db.settings.menuVisibility?.[key]!==false;return `<div class="menu-toggle-item"><span>${label}</span><button type="button" class="menu-switch" data-menu-toggle="${key}" aria-pressed="${on}"><span class="switch-text">${on?"ON":"OFF"}</span></button></div>`}).join("")}
+    </div>
+  </div>
+</div>
+`}
+};
+
+function bindPage(){
+  $$(".dashboard-stat").forEach(card=>card.onclick=()=>openDashboardSummary(card.dataset.summary));
+
+  $$("[data-page]").forEach(b=>b.onclick=()=>go(b.dataset.page));
+  if($("#posSearch"))$("#posSearch").oninput=e=>{
+    searchState.pos=e.target.value;
+    const q=searchState.pos.toLowerCase();
+    if($("#manicureGrid"))$("#manicureGrid").innerHTML=serviceCards(db.services.filter(x=>isManicure(x)&&(x.name+" "+x.category).toLowerCase().includes(q)));
+    if($("#pedicureGrid"))$("#pedicureGrid").innerHTML=serviceCards(db.services.filter(x=>isPedicure(x)&&(x.name+" "+x.category).toLowerCase().includes(q)));
+    if($("#otherServiceGrid"))$("#otherServiceGrid").innerHTML=serviceCards(db.services.filter(x=>!isManicure(x)&&!isPedicure(x)&&(x.name+" "+x.category).toLowerCase().includes(q)));
+  };
+  if($("#customerSearch"))$("#customerSearch").oninput=e=>{searchState.customers=e.target.value;$("#customerRows").innerHTML=customerRows(db.customers.filter(c=>(c.name+" "+c.phone+" "+(c.email||"")).toLowerCase().includes(searchState.customers.toLowerCase())))};
+  if($("#serviceSearch"))$("#serviceSearch").oninput=e=>{searchState.services=e.target.value;$("#serviceRows").innerHTML=serviceRows(db.services.filter(x=>(x.name+" "+x.category).toLowerCase().includes(searchState.services.toLowerCase())))};
+  if($("#discMode")){$("#discMode").value=discMode;$("#discMode").onchange=e=>{discMode=e.target.value;refreshTotals()}};
+  if($("#discAmount"))$("#discAmount").oninput=e=>{discAmount=e.target.value;refreshTotals()};
+  if($("#addCustomServiceBtn"))$("#addCustomServiceBtn").onclick=addCustomService;
+  if($("#clearCartBtn"))$("#clearCartBtn").onclick=()=>{db.cart=[];discAmount=0;save();refreshCart()};
+  if($("#checkoutBtn"))$("#checkoutBtn").onclick=checkout;
+  if($("#addCustomerBtn"))$("#addCustomerBtn").onclick=()=>editCustomer();
+  if($("#addServiceBtn"))$("#addServiceBtn").onclick=()=>editService();
+  if($("#addStaffBtn"))$("#addStaffBtn").onclick=()=>editStaff();
+  if($("#addInventoryBtn"))$("#addInventoryBtn").onclick=()=>editInventory();
+  if($("#addMembershipBtn"))$("#addMembershipBtn").onclick=()=>editMembership();
+  if($("#addApptBtn"))$("#addApptBtn").onclick=()=>editAppt();
+  if($("#saveSettingsBtn"))$("#saveSettingsBtn").onclick=saveSettings;
+  if($("#databaseSettingsBtn"))$("#databaseSettingsBtn").onclick=openDatabaseSettings;
+  $$(".menu-switch[data-menu-toggle]").forEach(btn=>btn.onclick=()=>{const key=btn.dataset.menuToggle;const on=btn.getAttribute("aria-pressed")!=="true";db.settings.menuVisibility={...MENU_DEFAULTS,...(db.settings.menuVisibility||{}),[key]:on};btn.setAttribute("aria-pressed",String(on));const text=btn.querySelector(".switch-text");if(text)text.textContent=on?"ON":"OFF";save();applyMenuVisibility();toast(on?"Menu 已开启":"Menu 已关闭")});
+  if($("#customColorPicker")){
+    $("#customColorPicker").oninput=e=>{
+      db.settings.color=e.target.value;
+      if($("#customColorHex"))$("#customColorHex").value=e.target.value;
+      save();applyBrand();
+    };
+  }
+  if($("#customColorHex")){
+    $("#customColorHex").onchange=e=>{
+      let v=e.target.value.trim();
+      if(!/^#[0-9a-fA-F]{6}$/.test(v)){toast("颜色格式请用 #RRGGBB");return;}
+      db.settings.color=v;
+      if($("#customColorPicker"))$("#customColorPicker").value=v;
+      save();render();
+    };
+  }
+  if($("#panelColorPicker"))$("#panelColorPicker").oninput=e=>{
+    db.settings.panelColor=e.target.value;
+    if($("#panelColorHex"))$("#panelColorHex").value=e.target.value;
+    save();applyBrand();
+  };
+  if($("#panelColorHex"))$("#panelColorHex").onchange=e=>{
+    const v=e.target.value.trim();
+    if(!/^#[0-9a-fA-F]{6}$/.test(v)){toast("版面颜色格式请用 #RRGGBB");return;}
+    db.settings.panelColor=v;
+    if($("#panelColorPicker"))$("#panelColorPicker").value=v;
+    save();applyBrand();
+  };
+  if($("#removeLogoBtn"))$("#removeLogoBtn").onclick=()=>{
+    db.settings.logo="";save();render();applyBrand();toast("Logo 已移除");
+  };
+  if($("#fontColorPicker"))$("#fontColorPicker").oninput=e=>{if($("#fontColorHex"))$("#fontColorHex").value=e.target.value};
+  if($("#fontColorHex"))$("#fontColorHex").onchange=e=>{let v=e.target.value.trim();if(!/^#[0-9a-fA-F]{6}$/.test(v)){toast("字体颜色格式请用 #RRGGBB");return;}if($("#fontColorPicker"))$("#fontColorPicker").value=v};
+  if($("#logoFile"))$("#logoFile").onchange=uploadLogo;
+  $$(".theme").forEach(b=>b.onclick=()=>{db.settings.color=b.dataset.color;save();render()});
+  if($("#salesSearch"))$("#salesSearch").oninput=e=>{
+    const box=$("#salesReportTable");
+    if(box)box.innerHTML=salesTable(filterSalesForSearch(e.target.value));
+  };
+  if($("#exportCsvBtn"))$("#exportCsvBtn").onclick=exportCSV;
+}
+
+function isManicure(s){
+  const v=((s.category||"")+" "+(s.name||"")).toLowerCase();
+  return v.includes("manicure")||v.includes("手")||v.includes("美甲");
+}
+function isPedicure(s){
+  const v=((s.category||"")+" "+(s.name||"")).toLowerCase();
+  return v.includes("pedicure")||v.includes("脚")||v.includes("足");
+}
+function addCustomService(){
+  const name=($("#customServiceName")?.value||"").trim();
+  const price=Number($("#customServicePrice")?.value||0);
+  if(!name){toast("请输入服务名称");return;}
+  if(!(price>=0)){toast("请输入正确价钱");return;}
+  db.cart.push({id:uid("custom"),name,price,qty:1,custom:true});
+  save();
+  refreshCart();
+  $("#customServiceName").value="";
+  $("#customServicePrice").value="";
+  toast("已加入订单");
+}
+function serviceCards(list){return list.map(s=>`<button type="button" class="service" onclick="addToCart('${s.id}')"><b>${esc(s.name)}</b><small>${esc(s.category)}</small><span class="price">${money(s.price)}</span></button>`).join("")||`<div class="empty" style="grid-column:1/-1">暂无数据</div>`}
+function cartHtml(){return db.cart.length?db.cart.map(x=>`<div class="cart-item"><span><b>${esc(x.name)}</b><br><small>${money(x.price)} × ${x.qty}</small></span><div><b>${money(x.price*x.qty)}</b><div class="qty"><button onclick="changeQty('${x.id}',-1)">−</button><span>${x.qty}</span><button onclick="changeQty('${x.id}',1)">+</button></div></div></div>`).join(""):`<div class="empty">还没有加服务</div>`}
+function cartSubtotal(){return db.cart.reduce((a,x)=>a+(Number(x.price)||0)*(Number(x.qty)||1),0)}
+function discountValue(){const sub=cartSubtotal(),v=Math.max(0,Number(discAmount)||0);return discMode==="fixed"?Math.min(v,sub):Math.min(sub,sub*v/100)}
+function totalsHtml(){const sub=cartSubtotal(),d=discountValue();return `<div class="total-row"><span>小计</span><b>${money(sub)}</b></div><div class="total-row"><span>折扣</span><b>- ${money(d)}</b></div><div class="total-row grand"><span>总额</span><b>${money(sub-d)}</b></div>`}
+function refreshCart(){if($("#cartItems"))$("#cartItems").innerHTML=cartHtml();refreshTotals()}
+function refreshTotals(){if($("#totals"))$("#totals").innerHTML=totalsHtml()}
+function addToCart(id){const svc=db.services.find(s=>s.id===id);if(!svc)return;let x=db.cart.find(i=>i.id===id);if(x)x.qty++;else db.cart.push({id:svc.id,name:svc.name,price:svc.price,qty:1});save();refreshCart();toast("已加进订单")}
+function changeQty(id,n){let x=db.cart.find(i=>i.id===id);if(!x)return;x.qty+=n;if(x.qty<=0)db.cart=db.cart.filter(i=>i.id!==id);save();refreshCart()}
+function findCustomerId(text){if(!text)return"";const c=db.customers.find(c=>text===c.name+" — "+c.phone||text===c.name);return c?c.id:null}
+function checkout(){if(!db.cart.length)return toast("请先加服务");const cid=findCustomerId($("#customerPicker").value);if(cid===null)return toast("请选择顾客");const sub=cartSubtotal(),d=discountValue(),total=sub-d;const sale={id:uid("sale"),date:today(),time:new Date().toTimeString().slice(0,5),customerId:cid,staffId:$("#staffPicker").value,payment:$("#payment").value,items:db.cart.map(x=>({...x})),subtotal:sub,discount:d,total,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};db.sales.push(sale);if(cid){const c=db.customers.find(c=>c.id===cid);c.visits=(c.visits||0)+1;c.spend=(c.spend||0)+total}db.cart=[];discAmount=0;save();toast("收款已保存");go("reports")}
+
+
+function openDashboardSummary(type){
+  if(type==="todaySales" || type==="todayTransactions"){
+    const rows=db.sales.filter(x=>x.date===today()).slice().reverse();
+    const title=type==="todaySales"?"今天销售记录":"今天交易";
+    modal(title, salesTable(rows), ()=>$("#modalRoot").innerHTML="");
+    const saveBtn=$("#modalSave"); if(saveBtn) saveBtn.style.display="none";
+    return;
+  }
+
+  if(type==="customers"){
+    modal("顾客名单", `<div class="table-wrap"><table class="table"><thead><tr><th>名字</th><th>电话</th><th>最近光顾</th><th>到店次数</th><th>消费金额</th></tr></thead><tbody>${db.customers.map(c=>{const h=(c.history||[]).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""))[0];return `<tr><td>${esc(c.name)}</td><td>${esc(c.phone||"")}</td><td>${h?esc((h.date||"")+" "+(h.service||"")):"-"}</td><td>${c.visits||0}</td><td>${money(c.spend||0)}</td></tr>`}).join("")||`<tr><td colspan="5" class="empty">暂无数据</td></tr>`}</tbody></table></div>`, ()=>$("#modalRoot").innerHTML="");
+    const saveBtn=$("#modalSave"); if(saveBtn) saveBtn.style.display="none";
+    return;
+  }
+
+  if(type==="todayAppointments"){
+    const rows=db.appointments.filter(a=>a.date===today());
+    modal("今天预约", `<div class="table-wrap"><table class="table"><thead><tr><th>时间</th><th>顾客</th><th>服务</th><th>员工</th><th>状态</th></tr></thead><tbody>${rows.map(a=>`<tr><td>${a.time}</td><td>${esc(db.customers.find(c=>c.id===a.customerId)?.name||"散客")}</td><td>${esc(db.services.find(s=>s.id===a.serviceId)?.name||"-")}</td><td>${esc(db.staff.find(s=>s.id===a.staffId)?.name||"-")}</td><td>${esc(a.status||"已预约")}</td></tr>`).join("")||`<tr><td colspan="5" class="empty">今天没有预约</td></tr>`}</tbody></table></div>`, ()=>$("#modalRoot").innerHTML="");
+    const saveBtn=$("#modalSave"); if(saveBtn) saveBtn.style.display="none";
+  }
+}
+
+function filterSalesForSearch(q){
+  q=(q||"").trim().toLowerCase();
+  if(!q)return db.sales.slice().reverse();
+  return db.sales.filter(s=>{
+    const customer=db.customers.find(c=>c.id===s.customerId);
+    const customerText=customer?(customer.name+" "+(customer.phone||"")):"散客";
+    const items=(s.items||[]).map(i=>i.name).join(" ");
+    const text=[
+      s.date||"",s.time||"",s.payment||"",customerText,items,
+      String(s.subtotal||""),String(s.discount||""),String(s.total||"")
+    ].join(" ").toLowerCase();
+    return text.includes(q);
+  }).slice().reverse();
+}
+function salesTable(rows){return `<div class="table-wrap"><table class="table"><thead><tr><th>日期</th><th>顾客</th><th>付款</th><th>总额</th><th></th></tr></thead><tbody>${rows.map(s=>`<tr><td>${s.date} ${s.time||""}</td><td>${esc(db.customers.find(c=>c.id===s.customerId)?.name||"散客")}</td><td>${esc(s.payment)}</td><td>${money(s.total)}</td><td><button class="btn" onclick="editSale('${s.id}')">编辑</button> <button class="danger" onclick="deleteSale('${s.id}')">删除</button></td></tr>`).join("")||`<tr><td colspan="5" class="empty">暂无数据</td></tr>`}</tbody></table></div>`}
+function customerRows(rows){
+  return rows.map(c=>{const last=(c.history||[]).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""))[0];return `<tr>
+    <td><button type="button" class="btn" style="background:transparent;padding:0;color:var(--accent);text-align:left" onclick="openCustomerHistory('${c.id}')"><b>${esc(c.name)}</b></button></td>
+    <td>${esc(c.phone)}</td>
+    <td>${last?`${esc(last.date||"-")}<br><small>${esc(last.service||"-")}</small>`:"-"}</td>
+    <td>${c.visits||0}</td>
+    <td>${money(c.spend||0)}</td>
+    <td>
+      <button class="btn" onclick="openCustomerHistory('${c.id}')">记录</button>
+      <button class="btn" onclick="editCustomer('${c.id}')">修改</button>
+      <button class="danger" onclick="deleteRecord('customers','${c.id}')">删除</button>
+    </td>
+  </tr>`}).join("")||`<tr><td colspan="6" class="empty">暂无数据</td></tr>`;
+}
+function serviceRows(rows){return rows.map(s=>`<tr><td>${esc(s.name)}</td><td>${esc(s.category)}</td><td>${money(s.price)}</td><td><button class="btn" onclick="editService('${s.id}')">编辑</button> <button class="danger" onclick="deleteRecord('services','${s.id}')">删除</button></td></tr>`).join("")||`<tr><td colspan="4" class="empty">暂无数据</td></tr>`}
+
+function openCustomerHistory(id){
+  const c=db.customers.find(x=>x.id===id);
+  if(!c)return;
+  const sales=db.sales.filter(x=>x.customerId===id).slice().reverse();
+  const appts=db.appointments.filter(x=>x.customerId===id).slice().sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  const history=(c.history||[]).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+
+  $("#modalRoot").innerHTML=`<div class="modal-bg"><div class="modal" style="width:900px">
+    <div class="toolbar">
+      <div>
+        <h3>${esc(c.name)}</h3>
+        <div class="muted">${esc(c.phone||"")}</div>
+      </div>
+      <button id="historyClose" class="btn">×</button>
+    </div>
+
+    <div class="grid g3" style="margin-bottom:16px">
+      <div class="card"><div class="stat-label">到店次数</div><div class="stat">${c.visits||0}</div></div>
+      <div class="card"><div class="stat-label">消费金额</div><div class="stat">${money(c.spend||0)}</div></div>
+      <div class="card"><div class="stat-label">历史记录</div><div class="stat">${history.length}</div></div>
+    </div>
+
+    <div class="toolbar" style="margin-top:4px">
+      <h3>之前光顾记录</h3>
+      <button type="button" class="primary" id="addPreviousVisitBtn">+ 添加记录</button>
+    </div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>日期</th><th>Service</th><th>Art Nailist</th><th>Remark</th><th>消费金额</th><th></th></tr></thead>
+        <tbody>${history.length?history.map(h=>`<tr>
+          <td>${esc(h.date||"-")}</td>
+          <td>${esc(h.service||"-")}</td>
+          <td>${esc(h.artist||"-")}</td>
+          <td>${esc(h.remark||"-")}</td>
+          <td><b>${money(h.amount||0)}</b></td>
+          <td><button class="danger" onclick="deleteCustomerVisit('${c.id}','${h.id}')">删除</button></td>
+        </tr>`).join(""):`<tr><td colspan="6" class="empty">还没有之前光顾记录</td></tr>`}</tbody>
+      </table>
+    </div>
+
+    <h3>销售记录</h3>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>日期</th><th>服务</th><th>付款</th><th>折扣</th><th>总额</th><th></th></tr></thead>
+        <tbody>${sales.length?sales.map(x=>`<tr>
+          <td>${x.date} ${x.time||""}</td>
+          <td>${x.items.map(i=>esc(i.name)+" × "+(i.qty||1)).join("<br>")}</td>
+          <td>${esc(x.payment||"-")}</td>
+          <td>${money(x.discount||0)}</td>
+          <td><b>${money(x.total)}</b></td>
+          <td><button class="btn" onclick="editSale('${x.id}')">修改</button></td>
+        </tr>`).join(""):`<tr><td colspan="6" class="empty">还没有销售记录</td></tr>`}</tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:20px">预约记录</h3>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>日期</th><th>时间</th><th>服务</th><th>员工</th><th>状态</th></tr></thead>
+        <tbody>${appts.length?appts.map(a=>`<tr>
+          <td>${a.date}</td>
+          <td>${a.time}</td>
+          <td>${esc(db.services.find(s=>s.id===a.serviceId)?.name||"-")}</td>
+          <td>${esc(db.staff.find(s=>s.id===a.staffId)?.name||"-")}</td>
+          <td>${esc(a.status||"已预约")}</td>
+        </tr>`).join(""):`<tr><td colspan="5" class="empty">还没有预约记录</td></tr>`}</tbody>
+      </table>
+    </div>
+  </div></div>`;
+
+  $("#historyClose").onclick=()=>$("#modalRoot").innerHTML="";
+  $("#addPreviousVisitBtn").onclick=()=>addCustomerVisit(id);
+}
+function modal(title,body,onSave){$("#modalRoot").innerHTML=`<div class="modal-bg"><div class="modal"><div class="toolbar"><h3>${title}</h3><button id="modalClose" class="btn">×</button></div>${body}<div class="modal-actions"><button id="modalCancel" class="btn">取消</button><button id="modalSave" class="primary">保存</button></div></div></div>`;$("#modalClose").onclick=$("#modalCancel").onclick=()=>$("#modalRoot").innerHTML="";$("#modalSave").onclick=onSave}
+function editCustomer(id){
+  const c=id?db.customers.find(x=>x.id===id):{name:"",phone:"",visits:0,spend:0,history:[]};
+  const isNew=!id;
+  modal(id?"修改顾客":"加顾客",`<div class="grid g2">
+    <div class="field"><label>名字</label><input id="mName" value="${esc(c.name||"")}"></div>
+    <div class="field"><label>电话</label><input id="mPhone" value="${esc(c.phone||"")}"></div>
+    ${isNew?`
+    <div class="field"><label>服务项目名称</label><input id="mHistoryService" placeholder="手动输入服务项目"></div>
+    <div class="field"><label>Art Nailist</label><select id="mHistoryArtist"><option value="">请选择</option>${db.staff.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join("")}</select></div>
+    <div class="field"><label>日期</label><input id="mHistoryDate" type="date" value="${today()}"></div>
+    <div class="field"><label>之前消费金额（RM）</label><input id="mHistoryAmount" type="number" min="0" step=".01" placeholder="0.00"></div>
+    <div class="field" style="grid-column:1/-1"><label>Remark</label><textarea id="mHistoryRemark" rows="3" placeholder="手动输入备注"></textarea></div>
+    `:""}
+  </div>`,()=>{
+    const name=$("#mName").value.trim();
+    const phone=$("#mPhone").value.trim();
+    if(!name)return toast("请输入名字");
+    if(id){
+      Object.assign(c,{name,phone});
+    }else{
+      const service=($("#mHistoryService")?.value||"").trim();
+      const artist=($("#mHistoryArtist")?.value||"").trim();
+      const date=$("#mHistoryDate")?.value||"";
+      const amount=Math.max(0,Number($("#mHistoryAmount")?.value||0));
+      const remark=($("#mHistoryRemark")?.value||"").trim();
+      const history=(service||artist||amount||remark)?[{id:uid("vh"),service,artist,date,amount,remark}]:[];
+      db.customers.push({id:uid("c"),name,phone,visits:history.length,spend:amount,history});
+    }
+    save();$("#modalRoot").innerHTML="";render();
+  });
+}
+
+function addCustomerVisit(customerId){
+  const c=db.customers.find(x=>x.id===customerId);
+  if(!c)return;
+  modal("添加之前光顾记录",`<div class="grid g2">
+    <div class="field"><label>服务项目名称</label><input id="mVisitService" placeholder="手动输入服务项目"></div>
+    <div class="field"><label>Art Nailist</label><select id="mVisitArtist"><option value="">请选择</option>${db.staff.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join("")}</select></div>
+    <div class="field"><label>日期</label><input id="mVisitDate" type="date" value="${today()}"></div>
+    <div class="field"><label>消费金额（RM）</label><input id="mVisitAmount" type="number" min="0" step=".01" placeholder="0.00"></div>
+    <div class="field" style="grid-column:1/-1"><label>Remark</label><textarea id="mVisitRemark" rows="3" placeholder="手动输入备注"></textarea></div>
+  </div>`,()=>{
+    const service=$("#mVisitService").value.trim();
+    const artist=$("#mVisitArtist").value.trim();
+    const date=$("#mVisitDate").value;
+    const amount=Math.max(0,Number($("#mVisitAmount").value||0));
+    const remark=$("#mVisitRemark").value.trim();
+    if(!service)return toast("请输入服务名称");
+    c.history=c.history||[];
+    c.history.push({id:uid("vh"),service,artist,date,amount,remark});
+    c.visits=(c.visits||0)+1;
+    c.spend=(c.spend||0)+amount;
+    save();$("#modalRoot").innerHTML="";openCustomerHistory(customerId);
+  });
+}
+
+function deleteCustomerVisit(customerId,visitId){
+  const c=db.customers.find(x=>x.id===customerId);
+  if(!c||!confirm("确定要删除这笔之前光顾记录吗？"))return;
+  const visit=(c.history||[]).find(x=>x.id===visitId);
+  if(visit){
+    c.visits=Math.max(0,(c.visits||0)-1);
+    c.spend=Math.max(0,(c.spend||0)-(Number(visit.amount)||0));
+  }
+  c.history=(c.history||[]).filter(x=>x.id!==visitId);
+  save();openCustomerHistory(customerId);
+}
+function editService(id){const x=id?db.services.find(s=>s.id===id):{name:"",category:"Manicure",price:0};modal(id?"修改服务":"加服务",`<div class="grid g2"><div class="field"><label>服务名字</label><input id="mName" value="${esc(x.name)}"></div><div class="field"><label>分类</label><input id="mCat" value="${esc(x.category)}"></div><div class="field"><label>价钱</label><input id="mPrice" type="number" step=".01" value="${x.price}"></div></div>`,()=>{if(id)Object.assign(x,{name:$("#mName").value,category:$("#mCat").value,price:+$("#mPrice").value||0});else db.services.push({id:uid("s"),name:$("#mName").value,category:$("#mCat").value,price:+$("#mPrice").value||0});save();$("#modalRoot").innerHTML="";render()})}
+function editStaff(id){const x=id?db.staff.find(s=>s.id===id):{name:"",role:"Nail Artist",commission:10,active:true};modal(id?"修改员工":"加员工",`<div class="grid g2"><div class="field"><label>名字</label><input id="mName" value="${esc(x.name)}"></div><div class="field"><label>职位</label><input id="mRole" value="${esc(x.role)}"></div><div class="field"><label>佣金 %</label><input id="mCom" type="number" value="${x.commission}"></div><div class="field"><label>状态</label><select id="mActive"><option value="1">使用中</option><option value="0">已停用</option></select></div></div>`,()=>{const o={name:$("#mName").value,role:$("#mRole").value,commission:+$("#mCom").value||0,active:$("#mActive").value==="1"};if(id)Object.assign(x,o);else db.staff.push({id:uid("st"),...o});save();$("#modalRoot").innerHTML="";render()});setTimeout(()=>{$("#mActive").value=x.active?"1":"0"},0)}
+function editInventory(id){const x=id?db.inventory.find(i=>i.id===id):{name:"",sku:"",stock:0,min:5,cost:0};modal(id?"编辑库存":"新增库存",`<div class="grid g2"><div class="field"><label>名称</label><input id="mName" value="${esc(x.name)}"></div><div class="field"><label>SKU</label><input id="mSku" value="${esc(x.sku)}"></div><div class="field"><label>库存</label><input id="mStock" type="number" value="${x.stock}"></div><div class="field"><label></label><input id="mMin" type="number" value="${x.min}"></div><div class="field"><label>成本</label><input id="mCost" type="number" step=".01" value="${x.cost}"></div></div>`,()=>{const o={name:$("#mName").value,sku:$("#mSku").value,stock:+$("#mStock").value||0,min:+$("#mMin").value||0,cost:+$("#mCost").value||0};if(id)Object.assign(x,o);else db.inventory.push({id:uid("i"),...o});save();$("#modalRoot").innerHTML="";render()})}
+function editMembership(id){const x=id?db.memberships.find(m=>m.id===id):{name:"",price:0,discount:5};modal(id?"修改会员配套":"加会员配套",`<div class="grid g2"><div class="field"><label>配套名字</label><input id="mName" value="${esc(x.name)}"></div><div class="field"><label>价钱</label><input id="mPrice" type="number" value="${x.price}"></div><div class="field"><label>折扣 %</label><input id="mDiscount" type="number" value="${x.discount}"></div></div>`,()=>{const o={name:$("#mName").value,price:+$("#mPrice").value||0,discount:+$("#mDiscount").value||0};if(id)Object.assign(x,o);else db.memberships.push({id:uid("m"),...o});save();$("#modalRoot").innerHTML="";render()})}
+function editAppt(id){const x=id?db.appointments.find(a=>a.id===id):{customerId:"",serviceId:db.services[0]?.id||"",staffId:db.staff[0]?.id||"",date:today(),time:"10:00",status:"已预约"};modal(id?"修改预约":"加预约",`<div class="grid g2"><div class="field"><label>顾客</label><select id="mCustomer"><option value="">散客</option>${db.customers.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select></div><div class="field"><label>服务</label><select id="mService">${db.services.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("")}</select></div><div class="field"><label>员工</label><select id="mStaff">${db.staff.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("")}</select></div><div class="field"><label>日期</label><input id="mDate" type="date" value="${x.date}"></div><div class="field"><label>时间</label><input id="mTime" type="time" value="${x.time}"></div><div class="field"><label>状态</label><select id="mStatus"><option>已预约</option><option>已完成</option><option>已取消</option></select></div></div>`,()=>{const o={customerId:$("#mCustomer").value,serviceId:$("#mService").value,staffId:$("#mStaff").value,date:$("#mDate").value,time:$("#mTime").value,status:$("#mStatus").value};if(id)Object.assign(x,o);else db.appointments.push({id:uid("a"),...o});save();$("#modalRoot").innerHTML="";render()});setTimeout(()=>{if($("#mCustomer"))$("#mCustomer").value=x.customerId;if($("#mService"))$("#mService").value=x.serviceId;if($("#mStaff"))$("#mStaff").value=x.staffId;if($("#mStatus"))$("#mStatus").value=x.status},0)}
+function editSale(id){const s=db.sales.find(x=>x.id===id);modal("修改销售",`<div class="grid g2"><div class="field"><label>顾客</label><select id="mCustomer"><option value="">散客</option>${db.customers.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select></div><div class="field"><label>付款</label><select id="mPayment"><option>现金</option><option>刷卡</option><option>QR Pay</option><option>电子钱包</option></select></div><div class="field"><label>折扣 RM</label><input id="mDiscount" type="number" min="0" step=".01" value="${s.discount||0}"></div></div>`,()=>{const oldTotal=s.total,oldCid=s.customerId,newCid=$("#mCustomer").value,d=Math.max(0,Math.min(+$("#mDiscount").value||0,s.subtotal));s.customerId=newCid;s.payment=$("#mPayment").value;s.discount=d;s.total=s.subtotal-d;s.updatedAt=new Date().toISOString();if(oldCid&&oldCid!==newCid){const c=db.customers.find(c=>c.id===oldCid);if(c){c.visits=Math.max(0,c.visits-1);c.spend=Math.max(0,c.spend-oldTotal)}}if(newCid!==oldCid&&newCid){const c=db.customers.find(c=>c.id===newCid);if(c){c.visits++;c.spend+=s.total}}else if(newCid){const c=db.customers.find(c=>c.id===newCid);if(c)c.spend=Math.max(0,c.spend-oldTotal)+s.total}save();$("#modalRoot").innerHTML="";render()});setTimeout(()=>{$("#mCustomer").value=s.customerId||"";$("#mPayment").value=s.payment},0)}
+function deleteSale(id){const s=db.sales.find(x=>x.id===id);if(!s||!confirm("确定要删除这笔销售吗？"))return;if(s.customerId){const c=db.customers.find(c=>c.id===s.customerId);if(c){c.visits=Math.max(0,c.visits-1);c.spend=Math.max(0,c.spend-s.total)}}db.sales=db.sales.filter(x=>x.id!==id);save();render();toast("销售已删除")}
+function deleteRecord(type,id){if(!confirm("确定要删除吗？"))return;db[type]=db[type].filter(x=>x.id!==id);save();render()}
+function saveSettings(){
+  const shop=$("#shopName").value.trim()||"Velvet Nail Studio";
+  const username=$("#loginUsernameSetting").value.trim();
+  const password=$("#loginPasswordSetting").value;
+  if(!username){toast("请输入登入账号");return;}
+  if(!password){toast("请输入登入密码");return;}
+  db.settings.shop=shop;
+  db.settings.username=username;
+  db.settings.password=password;
+  const autoLogoutMinutes=Math.round(Number($("#autoLogoutMinutes")?.value));
+  if(!Number.isFinite(autoLogoutMinutes)||autoLogoutMinutes<1||autoLogoutMinutes>120){toast("自动退出时间请输入 1 至 120 分钟");return;}
+  db.settings.autoLogoutMinutes=autoLogoutMinutes;
+  const fontColor=($("#fontColorHex")?.value||"#000000").trim();
+  if(!/^#[0-9a-fA-F]{6}$/.test(fontColor)){toast("字体颜色格式请用 #RRGGBB");return;}
+  db.settings.fontColor=fontColor;
+  db.settings.fontWeight=$("#fontWeightSetting")?.value||"400";
+  db.settings.menuVisibility={...MENU_DEFAULTS,...(db.settings.menuVisibility||{})};
+  $$(".menu-switch[data-menu-toggle]").forEach(btn=>{db.settings.menuVisibility[btn.dataset.menuToggle]=btn.getAttribute("aria-pressed")==="true"});
+  if(db.settings.menuVisibility[page]===false)page="dashboard";
+  save();
+  render();
+  toast("已保存");
+}
+function uploadLogo(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{db.settings.logo=r.result;save();render()};r.readAsDataURL(f)}
+function openDatabaseSettings(){modal("Google Sheet Database",`<div class="field"><label>Apps Script Web App URL</label><input id="dbWebAppUrl" value="${esc(getDatabaseUrl())}" placeholder="https://script.google.com/macros/s/.../exec"></div><div class="field"><label>Database Key</label><div class="password-wrap"><input id="dbApiKey" type="password" value="${esc(getDatabaseKey())}" placeholder="与 Code.gs 的 API_KEY 相同"><button type="button" id="dbKeyEye" class="password-eye" title="查看密码">👁</button></div></div><div class="actions"><button type="button" id="dbTestConnectionBtn" class="btn">测试连接</button></div><div id="dbConnectionStatus" class="muted" style="margin-top:9px">保存后会自动从 Google Sheet 载入资料；空白数据库会使用目前 POS 资料建立。</div>`,()=>{const url=$("#dbWebAppUrl").value.trim(),key=$("#dbApiKey").value.trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec(?:\?.*)?$/.test(url)){toast("Web App URL 不正确");return}if(!key){toast("请输入 Database Key");return}db.settings.googleAppsScriptUrl=url;db.settings.databaseKey=key;localStorage.setItem(KEY,JSON.stringify(db));$("#modalRoot").innerHTML="";syncFromDatabase(true)});setTimeout(()=>{const eye=$("#dbKeyEye"),input=$("#dbApiKey");if(eye&&input)eye.onclick=()=>{const showing=input.type==="text";input.type=showing?"password":"text";eye.textContent=showing?"👁":"🙈"};const test=$("#dbTestConnectionBtn");if(test)test.onclick=async()=>{const status=$("#dbConnectionStatus"),url=$("#dbWebAppUrl").value.trim(),key=$("#dbApiKey").value.trim();status.textContent="连接中...";try{const result=await databaseRequest("ping",null,url,key);status.textContent="连接成功："+(result.name||"Glowith Nail POS Database")}catch(error){status.textContent="连接失败："+error.message}}},0)}
+function exportCSV(){const rows=[["日期","时间","顾客","付款","小计","折扣","总额"],...db.sales.map(s=>[s.date,s.time,db.customers.find(c=>c.id===s.customerId)?.name||"散客",s.payment,s.subtotal,s.discount,s.total])];const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="sales.csv";a.click()}
+
+document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();go(b.dataset.page)}});
+$("#loginBtn").onclick=login;$("#logoutBtn").onclick=logout;
+$("#loginScreenPasswordEye").onclick=()=>{const input=$("#loginPass"),eye=$("#loginScreenPasswordEye"),showing=input.type==="text";input.type=showing?"password":"text";eye.textContent=showing?"👁":"🙈";eye.title=showing?"查看密码":"隐藏密码";eye.setAttribute("aria-label",eye.title)};
+render();
+setTimeout(()=>{if(getDatabaseUrl()&&getDatabaseKey())syncFromDatabase(false)},0);
+</script>
+
+
+
+
+<script id="safe-language-addon">
+(function(){
+  const zhToEn = {
+    "首页":"Home","收银":"Payment","预约":"Appointments","顾客":"Customers","服务":"Services",
+    "⌂ 首页":"⌂ Home","▣ 收银":"▣ Payment","◷ 预约":"◷ Appointments",
+    "♙ 顾客":"♙ Customers","✦ 服务":"✦ Services",
+    "♙ 员工与佣金":"♙ Staff & Commission","◇ 会员":"◇ Membership",
+    "▥ 销售报表":"▥ Sales Report","⚙ 设置":"⚙ Settings",
+    "员工与佣金":"Staff & Commission","会员":"Membership","销售报表":"Sales Report","设置":"Settings",
+    "+ 开新单":"+ New Sale","开新单":"New Sale","顾客管理":"Customers","服务项目":"Services",
+    "今天销售额":"Today's Sales","今天单数":"Today's Transactions","顾客人数":"Customers",
+    "今天预约":"Today's Appointments","最近销售记录":"Recent Sales","搜索服务":"Search services",
+    "搜索顾客":"Search customers","搜索顾客名字或电话":"Search name or phone",
+    "名字":"Name","电话":"Phone","会员":"Membership","到店次数":"Visits","操作":"Actions",
+    "暂无数据":"No data","店设置":"Store Settings","店名":"Store Name",
+    "登入账号":"Username","登入密码":"Password","主题颜色":"Theme Color",
+    "自动退出时间（分钟）":"Auto Logout (minutes)","没有操作超过此时间后需要重新登入":"Login is required again after this period of inactivity",
+    "连接 Google Sheet":"Connect Google Sheet","已连接 · 调整设置":"Connected · Edit Settings",
+    "测试连接":"Test Connection","连接中...":"Connecting...","请输入 Database Key":"Enter Database Key",
+    "Google Sheet 资料已载入":"Google Sheet data loaded","Google Sheet 已连接并建立资料":"Google Sheet connected and database created",
+    "版面背景颜色":"Panel Color","字体颜色":"Font Color","字体粗细":"Font Weight",
+    "正常":"Normal","加粗 Bold":"Bold","店 Logo":"Store Logo","添加 Logo":"Add Logo",
+    "移除 Logo":"Remove Logo",
+    "Menu 开关":"Menu Visibility","关闭只隐藏 Menu，不会删除资料。":"Turning a menu off only hides it. Your data stays safe.",
+    "Menu 已开启":"Menu enabled","Menu 已关闭":"Menu disabled",
+    "保存":"Save","登入":"Login","账号":"Username",
+    "密码":"Password","退出":"Logout","服务名称":"Service Name","价钱":"Price",
+    "临时项目":"Custom Service","加入订单":"Add to Order","其他服务":"Other Services",
+    "订单":"Order","清除":"Clear","员工":"Staff","折扣":"Discount","付款":"Payment",
+    "现金":"Cash","刷卡":"Card","QR Pay":"QR Pay","电子钱包":"E-Wallet",
+    "完成收款":"Complete Payment","百分比 %":"Percentage %","固定 RM":"Fixed RM",
+    "销售记录":"Sales History","修改":"Edit","删除":"Delete","记录":"History",
+    "日期":"Date","时间":"Time","状态":"Status","预约记录":"Appointment History",
+    "消费金额":"Total Spent","到店次数":"Visits","还没有销售记录":"No sales history",
+    "还没有预约记录":"No appointment history","请输入登入账号":"Enter username",
+    "请输入登入密码":"Enter password","账号或密码不对":"Incorrect username or password",
+    "自动退出时间请输入 1 至 120 分钟":"Enter an auto logout time from 1 to 120 minutes",
+    "美甲店 POS":"Nail Salon POS","顾客名单":"Customer List","今天交易":"Today's Transactions",
+    "今天销售记录":"Today's Sales Records","点击查看今天销售记录":"View today's sales",
+    "点击查看今天交易":"View today's transactions","点击查看顾客名单":"View customer list",
+    "点击查看今天预约":"View today's appointments","总销售":"Total Sales","单数":"Transactions",
+    "平均每单":"Average Sale","顾客人数":"Customer Count","服务项目":"Service Items",
+    "手部":"Hands","脚部":"Feet","Manicure 手部":"Manicure","Pedicure 脚部":"Pedicure",
+    "分类":"Category","时间（分钟）":"Duration (minutes)","服务名字":"Service Name",
+    "加服务":"Add Service","+ 加服务":"+ Add Service","请输入服务名称":"Enter service name",
+    "请输入正确价钱":"Enter a valid price","已加进订单":"Added to order","已加入订单":"Added to order",
+    "还没有加服务":"No services added","请先加服务":"Please add a service",
+    "请选择顾客":"Please select a customer","小计":"Subtotal","总额":"Total","散客":"Walk-in",
+    "收款已保存":"Payment saved","加顾客":"Add Customer","+ 加顾客":"+ Add Customer",
+    "修改顾客":"Edit Customer","请输入名字":"Enter a name","销售":"Sales",
+    "加预约":"Add Appointment","+ 加预约":"+ Add Appointment","修改预约":"Edit Appointment",
+    "已预约":"Scheduled","已完成":"Completed","已取消":"Cancelled",
+    "加员工":"Add Staff","+ 加员工":"+ Add Staff","修改员工":"Edit Staff",
+    "职位":"Role","佣金":"Commission","佣金 %":"Commission %","使用中":"Active","已停用":"Inactive",
+    "加会员配套":"Add Membership Plan","+ 加会员配套":"+ Add Membership Plan",
+    "修改会员配套":"Edit Membership Plan","配套":"Plan","配套名字":"Plan Name",
+    "折扣 %":"Discount %","折扣 RM":"Discount RM","修改销售":"Edit Sale",
+    "修改服务":"Edit Service","确定要删除吗？":"Are you sure you want to delete this?",
+    "确定要删除这笔销售吗？":"Are you sure you want to delete this sale?",
+    "销售已删除":"Sale deleted","取消":"Cancel","编辑":"Edit","自选颜色":"Custom Color",
+    "颜色格式请用 #RRGGBB":"Use #RRGGBB color format",
+    "版面颜色格式请用 #RRGGBB":"Use #RRGGBB panel color format",
+    "字体颜色格式请用 #RRGGBB":"Use #RRGGBB font color format",
+    "查看密码":"Show password","隐藏密码":"Hide password","已保存":"Saved",
+    "Logo 已移除":"Logo removed","导出 Excel/CSV":"Export Excel/CSV",
+    "名称":"Name","库存":"Stock","成本":"Cost","新增库存":"Add Inventory",
+    "编辑库存":"Edit Inventory","经典手部护理":"Classic Manicure","凝胶手部护理":"Gel Manicure",
+    "经典足部护理":"Classic Pedicure","凝胶足部护理":"Gel Pedicure",
+    "美甲彩绘":"Nail Art","卸甲":"Removal","手部护理":"Manicure","足部护理":"Pedicure",
+    "服务项目名称":"Service","美甲师":"Art Nailist","请选择":"Please select",
+    "手动输入服务项目":"Type service manually","备注":"Remark","手动输入备注":"Type remark manually",
+    "之前消费金额（RM）":"Previous Spending (RM)",
+    "消费金额（RM）":"Spending (RM)","最近光顾":"Latest Visit","历史记录":"History Records",
+    "之前光顾记录":"Previous Visit Records","+ 添加记录":"+ Add Record",
+    "添加之前光顾记录":"Add Previous Visit","还没有之前光顾记录":"No previous visit records",
+    "确定要删除这笔之前光顾记录吗？":"Are you sure you want to delete this previous visit?"
+  };
+  const enToZh = {};
+  Object.keys(zhToEn).forEach(k=>{if(!enToZh[zhToEn[k]])enToZh[zhToEn[k]]=k});
+
+  let currentLang = localStorage.getItem("glowith_lang") || "zh";
+
+  function translateTextNode(el){
+    if(!el || el.children.length!==0) return;
+    const raw = el.textContent;
+    const trimmed = raw.trim();
+    if(!trimmed) return;
+    const englishOnlyPage=typeof page!=="undefined"&&["pos","services"].includes(page)&&
+      (el.closest("#content")||el.closest("#modalRoot"));
+    const dict = (currentLang==="en"||englishOnlyPage) ? zhToEn : enToZh;
+    if(dict[trimmed]){
+      el.textContent = raw.replace(trimmed, dict[trimmed]);
+    }
+  }
+
+  function translatePlaceholders(){
+    document.querySelectorAll("input[placeholder],textarea[placeholder]").forEach(el=>{
+      const englishOnlyPage=typeof page!=="undefined"&&["pos","services"].includes(page)&&
+        (el.closest("#content")||el.closest("#modalRoot"));
+      const dict = (currentLang==="en"||englishOnlyPage) ? zhToEn : enToZh;
+      const p=el.getAttribute("placeholder");
+      if(dict[p]) el.setAttribute("placeholder",dict[p]);
+    });
+  }
+
+  function applyLanguage(){
+    document.documentElement.lang = currentLang==="en" ? "en" : "zh-CN";
+    document.querySelectorAll("button,label,h1,h2,h3,h4,th,td,span,small,p,div,option").forEach(translateTextNode);
+    translatePlaceholders();
+    document.querySelectorAll("[data-safe-lang]").forEach(b=>{
+      b.classList.toggle("active",b.dataset.safeLang===currentLang);
+    });
+  }
+
+  const nativeConfirm=window.confirm.bind(window);
+  window.confirm=function(message){
+    const text=String(message);
+    return nativeConfirm(currentLang==="en"?(zhToEn[text]||text):(enToZh[text]||text));
+  };
+
+  function ensureSwitch(){
+    const topbar=document.querySelector(".topbar");
+    if(topbar && !document.getElementById("safeLangSwitch")){
+      const sw=document.createElement("div");
+      sw.id="safeLangSwitch";
+      sw.className="lang-switch-safe";
+      sw.innerHTML='<button type="button" data-safe-lang="zh">中文</button><button type="button" data-safe-lang="en">English</button>';
+      topbar.appendChild(sw);
+    }
+  }
+
+  document.addEventListener("click",function(e){
+    const b=e.target.closest("[data-safe-lang]");
+    if(!b)return;
+    currentLang=b.dataset.safeLang;
+    localStorage.setItem("glowith_lang",currentLang);
+    if(typeof render==="function") render();
+    else { ensureSwitch(); applyLanguage(); }
+  });
+
+  let languageUpdateQueued=false;
+  function scheduleLanguageUpdate(){
+    if(languageUpdateQueued)return;
+    languageUpdateQueued=true;
+    requestAnimationFrame(function(){
+      languageUpdateQueued=false;
+      ensureSwitch();
+      applyLanguage();
+    });
+  }
+  const languageObserver=new MutationObserver(scheduleLanguageUpdate);
+  languageObserver.observe(document.body,{childList:true,subtree:true});
+
+  // Patch render once, safely.
+  if(typeof render==="function"){
+    const originalRender=render;
+    window.render=function(){
+      const result=originalRender.apply(this,arguments);
+      ensureSwitch();
+      applyLanguage();
+      return result;
+    };
+  }
+
+  // Initial setup after original app load.
+  ensureSwitch();
+  applyLanguage();
+})();
+</script>
+
+
+<script id="remove-top-new-sale-addon">
+(function(){
+  function removeTopNewSaleButtons(){
+    document.querySelectorAll(".topbar button,.toolbar button").forEach(btn=>{
+      const t=(btn.textContent||"").trim();
+      if(["开新单","+ 开新单","New Sale","+ New Sale"].includes(t)){
+        btn.style.display="none";
+      }
+    });
+  }
+  const oldRender = (typeof window.render==="function") ? window.render : null;
+  if(oldRender){
+    window.render=function(){
+      const r=oldRender.apply(this,arguments);
+      removeTopNewSaleButtons();
+      return r;
+    };
+  }
+  removeTopNewSaleButtons();
+})();
+</script>
+
+
+
+
+
+<script id="button-layout-final-js">
+(function(){
+  function fix(){
+    document.querySelectorAll("#sidebarNewSale,.sidebar-new-sale").forEach(x=>x.remove());
+
+    if(typeof page!=="undefined" && page==="dashboard"){
+      const card=[...document.querySelectorAll(".card")].find(c=>{
+        const t=c.textContent||"";
+        return t.includes("最近销售记录")||t.includes("Recent Sales");
+      });
+      if(card && !card.querySelector("#dashboardNewSaleBtn")){
+        const title=[...card.querySelectorAll("h2,h3,h4")].find(h=>{
+          const t=(h.textContent||"").trim();
+          return t==="最近销售记录"||t==="Recent Sales";
+        });
+        const btn=document.createElement("button");
+        btn.id="dashboardNewSaleBtn";
+        btn.className="action-dark";
+        btn.type="button";
+        btn.textContent="+ 开新单";
+        btn.onclick=()=>{page="pos";render();};
+        if(title){
+          const wrap=document.createElement("div");
+          wrap.className="dashboard-sales-head";
+          title.parentNode.insertBefore(wrap,title);
+          wrap.appendChild(title);
+          wrap.appendChild(btn);
+        }else card.insertBefore(btn,card.firstChild);
+      }
+    }
+
+    if(typeof page!=="undefined" && page==="customers"){
+      const search=document.querySelector("#customerSearch");
+      const btn=document.querySelector("#addCustomerBtn");
+      if(search&&btn&&!search.parentElement.classList.contains("customer-actions")){
+        const wrap=document.createElement("div");
+        wrap.className="customer-actions";
+        search.parentNode.insertBefore(wrap,search);
+        wrap.appendChild(search);
+        wrap.appendChild(btn);
+        btn.classList.add("action-dark");
+      }
+    }
+
+    if(typeof page!=="undefined" && page==="services"){
+      const search=document.querySelector("#serviceSearch");
+      const btn=document.querySelector("#addServiceBtn");
+      if(search&&btn&&!search.parentElement.classList.contains("service-actions")){
+        const wrap=document.createElement("div");
+        wrap.className="service-actions";
+        search.parentNode.insertBefore(wrap,search);
+        wrap.appendChild(search);
+        wrap.appendChild(btn);
+        btn.classList.add("action-dark");
+      }
+    }
+  }
+
+  const oldRender=window.render;
+  if(typeof oldRender==="function"){
+    window.render=function(){
+      const r=oldRender.apply(this,arguments);
+      fix();
+      return r;
+    };
+  }
+  fix();
+})();
+</script>
+
+
+<script id="dashboard-new-sale-position-fix">
+(function(){
+  function fixDashboardButton(){
+    if(typeof page==="undefined" || page!=="dashboard") return;
+    const btn=document.getElementById("dashboardNewSaleBtn");
+    if(!btn) return;
+    const head=btn.closest(".dashboard-sales-head");
+    if(head){
+      head.style.width="100%";
+      head.style.display="flex";
+      head.style.alignItems="center";
+      head.style.justifyContent="space-between";
+      btn.style.marginLeft="auto";
+    }
+  }
+
+  const oldRender=window.render;
+  if(typeof oldRender==="function"){
+    window.render=function(){
+      const r=oldRender.apply(this,arguments);
+      fixDashboardButton();
+      return r;
+    };
+  }
+  fixDashboardButton();
+})();
+</script>
+
+
+<script id="settings-two-column-eye-addon">
+(function(){
+  function enhanceSettings(){
+    if(typeof page==="undefined" || page!=="settings") return;
+
+    const content=document.getElementById("content");
+    if(!content) return;
+
+    // Find the main settings card.
+    const cards=[...content.querySelectorAll(".card")];
+    const mainCard=cards.find(card=>{
+      const txt=(card.textContent||"");
+      return txt.includes("店设置") || txt.includes("Store Settings");
+    });
+    if(!mainCard) return;
+
+    // Build two-column layout only once per render.
+    if(!mainCard.querySelector(".settings-two-col")){
+      const title=[...mainCard.children].find(el=>/^H[1-4]$/.test(el.tagName));
+      const fields=[...mainCard.children].filter(el=>el.classList && el.classList.contains("field"));
+      const saveBtn=[...mainCard.children].find(el=>el.id==="saveSettingsBtn");
+      const menuSettings=[...mainCard.children].find(el=>el.classList?.contains("menu-toggle-settings"));
+
+      const left=document.createElement("div");
+      left.className="settings-left";
+      const right=document.createElement("div");
+      right.className="settings-right";
+      const grid=document.createElement("div");
+      grid.className="settings-two-col";
+
+      const rightLabels=[
+        "主题颜色","Theme Color",
+        "版面背景颜色","Panel Color",
+        "字体颜色","Font Color",
+        "字体粗细","Font Weight",
+        "店 Logo","Store Logo"
+      ];
+
+      fields.forEach(field=>{
+        const label=field.querySelector("label");
+        const text=(label?.textContent||"").trim();
+        if(rightLabels.includes(text)) right.appendChild(field);
+        else left.appendChild(field);
+      });
+
+      if(saveBtn) left.appendChild(saveBtn);
+      if(menuSettings) left.appendChild(menuSettings);
+
+      grid.appendChild(left);
+      grid.appendChild(right);
+
+      if(title) title.insertAdjacentElement("afterend",grid);
+      else mainCard.prepend(grid);
+    }
+
+    // Password eye
+    const pw=document.getElementById("loginPasswordSetting");
+    if(pw && !document.getElementById("loginPasswordEye")){
+      const wrap=document.createElement("div");
+      wrap.className="password-wrap";
+      pw.parentNode.insertBefore(wrap,pw);
+      wrap.appendChild(pw);
+
+      const eye=document.createElement("button");
+      eye.type="button";
+      eye.id="loginPasswordEye";
+      eye.className="password-eye";
+      eye.setAttribute("aria-label","查看密码");
+      eye.title="查看密码";
+      eye.textContent="👁";
+      eye.onclick=function(){
+        const showing=pw.type==="text";
+        pw.type=showing?"password":"text";
+        eye.textContent=showing?"👁":"🙈";
+        eye.title=showing?"查看密码":"隐藏密码";
+      };
+      wrap.appendChild(eye);
+    }
+
+  }
+
+  const oldRender=window.render;
+  if(typeof oldRender==="function"){
+    window.render=function(){
+      const r=oldRender.apply(this,arguments);
+      enhanceSettings();
+      return r;
+    };
+  }
+  enhanceSettings();
+})();
+</script>
+
+
+
+
+
+<script id="page-session-timeout-addon-v2">
+(function(){
+  const PAGE_KEY="glowith_last_page";
+  const AUTH_KEY="glowith_session_active";
+  const ACTIVITY_KEY="glowith_last_activity";
+  const VALID_PAGES=["dashboard","pos","appointments","customers","services","staff","membership","reports","settings"];
+
+  function now(){return Date.now();}
+  function timeoutMs(){
+    const minutes=Number((typeof db!=="undefined"&&db.settings&&db.settings.autoLogoutMinutes)||3);
+    return Math.max(1,Math.min(120,Number.isFinite(minutes)?minutes:3))*60*1000;
+  }
+  function appVisible(){
+    const app=document.getElementById("app");
+    return !!app && !app.classList.contains("hidden");
+  }
+  function sessionValid(){
+    const active=localStorage.getItem(AUTH_KEY)==="1";
+    const last=Number(localStorage.getItem(ACTIVITY_KEY)||0);
+    return active && last>0 && (now()-last)<timeoutMs();
+  }
+  function savePage(){
+    try{
+      if(typeof page!=="undefined" && VALID_PAGES.includes(page)){
+        localStorage.setItem(PAGE_KEY,page);
+      }
+    }catch(e){}
+  }
+  let lastTouchWrite=0;
+  function touch(){
+    const timestamp=now();
+    if(timestamp-lastTouchWrite<5000)return;
+    if(appVisible() && localStorage.getItem(AUTH_KEY)==="1"){
+      lastTouchWrite=timestamp;
+      localStorage.setItem(ACTIVITY_KEY,String(timestamp));
+      savePage();
+    }
+  }
+  function showLogin(){
+    const app=document.getElementById("app");
+    const login=document.getElementById("login");
+    if(app)app.classList.add("hidden");
+    if(login)login.classList.remove("hidden");
+    localStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem(ACTIVITY_KEY);
+  }
+  function restoreSession(){
+    if(!sessionValid()){
+      showLogin();
+      return;
+    }
+    const saved=localStorage.getItem(PAGE_KEY);
+    if(saved && VALID_PAGES.includes(saved) && typeof page!=="undefined"){
+      page=saved;
+    }
+    const login=document.getElementById("login");
+    const app=document.getElementById("app");
+    if(login)login.classList.add("hidden");
+    if(app)app.classList.remove("hidden");
+    if(typeof render==="function")render();
+  }
+
+  // Remember every page change without changing existing navigation logic.
+  const originalGo=window.go;
+  if(typeof originalGo==="function"){
+    window.go=function(p){
+      const result=originalGo.apply(this,arguments);
+      try{
+        if(VALID_PAGES.includes(p))localStorage.setItem(PAGE_KEY,p);
+      }catch(e){}
+      touch();
+      return result;
+    };
+  }
+
+  // The original login button already calls login().
+  // After a successful login (app becomes visible), create the session and restore last page.
+  const loginBtn=document.getElementById("loginBtn");
+  if(loginBtn){
+    loginBtn.addEventListener("click",function(){
+      setTimeout(function(){
+        if(appVisible()){
+          localStorage.setItem(AUTH_KEY,"1");
+          localStorage.setItem(ACTIVITY_KEY,String(now()));
+          const saved=localStorage.getItem(PAGE_KEY);
+          if(saved && VALID_PAGES.includes(saved) && typeof page!=="undefined"){
+            page=saved;
+            if(typeof render==="function")render();
+          }
+        }
+      },0);
+    });
+  }
+
+  // Explicit logout must invalidate the session, but keep the last page.
+  const logoutBtn=document.getElementById("logoutBtn");
+  if(logoutBtn){
+    logoutBtn.addEventListener("click",function(){
+      savePage();
+      localStorage.removeItem(AUTH_KEY);
+      localStorage.removeItem(ACTIVITY_KEY);
+    },true);
+  }
+
+  // Real user activity resets the adjustable inactivity timer.
+  ["pointerdown","keydown","touchstart","wheel","input","change"].forEach(evt=>{
+    document.addEventListener(evt,touch,{passive:true});
+  });
+
+  // Check inactivity.
+  setInterval(function(){
+    if(localStorage.getItem(AUTH_KEY)!=="1")return;
+    const last=Number(localStorage.getItem(ACTIVITY_KEY)||0);
+    if(!last || now()-last>=timeoutMs()){
+      savePage();
+      showLogin();
+    }
+  },5000);
+
+  window.addEventListener("beforeunload",function(){
+    savePage();
+  });
+
+  // This is the important part for Refresh / Reload:
+  // Restore the same page while the adjustable inactivity session is valid.
+  restoreSession();
+})();
+</script>
+
+</body>
+</html>
