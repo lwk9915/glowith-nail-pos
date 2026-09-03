@@ -414,7 +414,7 @@ img,svg{max-width:100%}
   body[data-pos-page="settings"] .field label{margin-bottom:clamp(2px,.45vh,5px)}
   body[data-pos-page="settings"] input,
   body[data-pos-page="settings"] select,
-  body[data-pos-page="settings"] button{min-height:34px;padding-top:clamp(6px,.8vh,10px);padding-bottom:clamp(6px,.8vh,10px)}
+  body[data-pos-page="settings"] #content button{min-height:34px;padding-top:clamp(6px,.8vh,10px);padding-bottom:clamp(6px,.8vh,10px)}
   body[data-pos-page="settings"] .logo-preview{height:clamp(50px,10vh,82px)}
   body[data-pos-page="settings"] .menu-toggle-settings{padding-top:clamp(5px,.8vh,10px)}
   body[data-pos-page="settings"] .menu-toggle-heading{margin-bottom:clamp(4px,.65vh,8px)}
@@ -436,7 +436,7 @@ img,svg{max-width:100%}
   body[data-pos-page="settings"] .field{margin:1px 0;font-size:12px}
   body[data-pos-page="settings"] input,
   body[data-pos-page="settings"] select,
-  body[data-pos-page="settings"] button{min-height:30px;padding:5px 8px;font-size:12px}
+  body[data-pos-page="settings"] #content button{min-height:30px;padding:5px 8px;font-size:12px}
   body[data-pos-page="settings"] .logo-preview{height:45px}
   body[data-pos-page="settings"] .muted{font-size:10px}
   body[data-pos-page="settings"] .menu-toggle-item{min-height:27px;padding:2px 6px}
@@ -444,38 +444,157 @@ img,svg{max-width:100%}
   body[data-pos-page="settings"] .menu-switch::before{width:16px;height:16px}
 }
 </style>
+
+<style id="compact-fit-content-service-cards">
+/* Option C: category tabs with compact service rows. */
+body[data-pos-page="pos"] .pos-category-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+body[data-pos-page="pos"] .pos-category-tab{min-height:34px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--soft);color:var(--ink);font-weight:800;cursor:pointer}
+body[data-pos-page="pos"] .pos-category-tab[aria-selected="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+body[data-pos-page="pos"] .pos-category-service-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 12px;border-top:1px solid var(--line);margin-bottom:12px}
+body[data-pos-page="pos"] .pos-service-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;min-width:0;min-height:48px;padding:7px 9px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;color:var(--ink);text-align:left;cursor:pointer}
+body[data-pos-page="pos"] .pos-service-row:hover,body[data-pos-page="pos"] .pos-service-row:focus-visible{background:var(--accent-soft);outline:none}
+body[data-pos-page="pos"] .pos-service-copy{display:flex;min-width:0;flex-direction:column;gap:2px}
+body[data-pos-page="pos"] .pos-service-copy b{overflow:hidden;font-size:12px;line-height:1.2;text-overflow:ellipsis;white-space:nowrap}
+body[data-pos-page="pos"] .pos-service-copy small{overflow:hidden;color:var(--muted);font-size:10px;line-height:1.15;text-overflow:ellipsis;white-space:nowrap}
+body[data-pos-page="pos"] .pos-service-row .price{font-size:12px;white-space:nowrap}
+@media(max-width:720px){
+  body[data-pos-page="pos"] .pos-category-service-list{grid-template-columns:1fr;gap:0}
+  body[data-pos-page="pos"] .pos-category-tab{flex:1 1 auto;padding-inline:9px}
+  body[data-pos-page="pos"] .pos-service-row{min-height:50px}
+}
+</style>
+<style id="collapsible-sidebar-addon">
+.sidebar-toggle{position:absolute;top:18px;right:-12px;display:grid;place-items:center;width:24px;height:32px;min-height:32px;padding:0;border:0;border-radius:8px;background:transparent;color:#050505;cursor:pointer;box-shadow:none;z-index:12;transition:background .16s}
+.sidebar-toggle:hover{background:#ffffffc9}
+.sidebar-toggle:focus-visible{outline:2px solid #111;outline-offset:1px}
+.sidebar-arrow{display:block;width:6px;height:6px;border-top:2.2px solid #050505;border-right:2.2px solid #050505;transform:rotate(-135deg);transition:transform .18s ease}
+body.sidebar-collapsed .sidebar-arrow{transform:rotate(45deg)}
+.sidebar,.main{transition:none!important}
+body.sidebar-collapsed .main{width:calc(100% - 76px)}
+.brand{cursor:pointer;border-radius:10px}
+.brand:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(min-width:721px){.sidebar{overflow:visible!important}.sidebar .nav{overflow-y:auto}}
+.sidebar .nav button,.sidebar-bottom button{display:flex;align-items:center;gap:8px;box-sizing:border-box;width:100%;height:42px;min-height:42px;padding:0 11px!important;font-size:14px!important;line-height:1.2!important}
+body.sidebar-collapsed .sidebar .nav button{height:42px;min-height:42px;padding:0 6px!important}
+.topbar{justify-content:flex-start}.topbar h2{margin-right:auto}
+.nav-icon{display:inline-flex;width:22px;flex:0 0 22px;align-items:center;justify-content:center}.nav-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nav-label{display:inline}
+body.sidebar-collapsed .sidebar{width:76px;padding-inline:10px}
+body.sidebar-collapsed .main{margin-left:76px}
+body.sidebar-collapsed .brand{box-sizing:border-box;width:56px;max-width:56px;padding:2px 0 20px;justify-content:center;gap:0;overflow:visible}
+body.sidebar-collapsed .brand>div:last-child,
+body.sidebar-collapsed #brandName,
+body.sidebar-collapsed .brand small{display:none!important}
+body.sidebar-collapsed #brandLogo{display:grid!important;visibility:visible!important;flex:0 0 56px;width:56px!important;min-width:56px!important;height:44px!important;margin:0!important;overflow:visible!important}
+body.sidebar-collapsed #brandLogo img{display:block!important;visibility:visible!important;width:100%!important;height:100%!important;max-width:56px!important;object-fit:contain!important}
+body.sidebar-collapsed .nav button{display:flex;justify-content:center;padding-inline:6px}
+body.sidebar-collapsed .nav-label{display:none}
+body.sidebar-collapsed .nav-icon{width:22px;flex-basis:22px}
+body.sidebar-collapsed .sidebar-bottom .nav-label{display:none}
+body.sidebar-collapsed .sidebar-bottom button{display:flex;align-items:center;justify-content:center}
+@media(max-width:720px){
+  .sidebar-toggle{top:15px;right:12px}
+  body.sidebar-collapsed .sidebar{width:100%;padding:10px 12px}
+  body.sidebar-collapsed .main{width:100%;margin-left:0}
+  body.sidebar-collapsed .sidebar .nav,body.sidebar-collapsed .sidebar .sidebar-bottom{display:none}
+  body.sidebar-collapsed .brand{justify-content:flex-start}
+  body.sidebar-collapsed .brand>div:last-child{display:block}
+}
+</style>
+<style id="polished-dropdowns-addon">
+select{
+  -webkit-appearance:none;
+  appearance:none;
+  min-height:42px;
+  padding:9px 40px 9px 12px!important;
+  border:1px solid #e5dadd!important;
+  border-radius:11px!important;
+  background-color:#fff!important;
+  background-image:linear-gradient(45deg,transparent 50%,#756a6e 50%),linear-gradient(135deg,#756a6e 50%,transparent 50%)!important;
+  background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%!important;
+  background-size:5px 5px,5px 5px!important;
+  background-repeat:no-repeat!important;
+  color:var(--ink)!important;
+  font:inherit;
+  line-height:1.2;
+  cursor:pointer;
+  box-shadow:0 1px 2px #2d242708;
+  transition:border-color .18s,box-shadow .18s,background-color .18s;
+}
+select:hover{border-color:#cdbec3!important;background-color:#fffdfd!important}
+select:focus{border-color:var(--accent)!important;box-shadow:0 0 0 3px var(--accent-soft)!important;outline:none}
+select:disabled{cursor:not-allowed;opacity:.58;background-color:#f5f2f3!important}
+select option{background:#fff;color:#2d2427;padding:8px}
+body[data-pos-page="settings"] select{min-height:34px;padding-top:6px!important;padding-bottom:6px!important}
+@media(max-width:720px){select{min-height:44px;font-size:16px}}
+</style>
+<style id="customer-search-dropdown-addon">
+.customer-picker-wrap{position:relative}
+.customer-picker-wrap>input{padding-right:38px!important;background:#fff!important}
+.customer-picker-wrap::after{content:"";position:absolute;right:15px;top:50%;width:7px;height:7px;border-right:1.7px solid #756a6e;border-bottom:1.7px solid #756a6e;transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.customer-picker-menu{position:absolute;z-index:130;top:calc(100% + 6px);left:0;right:0;max-height:238px;overflow:auto;padding:6px;border:1px solid #e4dadd;border-radius:13px;background:#fff;box-shadow:0 14px 34px #2d242724}
+.customer-picker-menu.hidden{display:none}
+.customer-picker-option{display:flex;width:100%;min-height:45px;align-items:center;justify-content:space-between;gap:12px;padding:8px 10px;border:0;border-radius:9px;background:transparent;color:var(--ink);text-align:left;cursor:pointer}
+.customer-picker-option:hover,.customer-picker-option:focus{background:var(--accent-soft);outline:none}
+.customer-picker-option b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.customer-picker-option small{flex:0 0 auto;color:var(--muted);font-size:11px}
+.customer-picker-empty{padding:13px 10px;color:var(--muted);font-size:12px;text-align:center}
+</style>
+<style id="complete-autofit-safety-layer">
+*,*::before,*::after{box-sizing:border-box}
+html,body,#app,.content,#content{width:100%;max-width:100%}
+.main,.content,#content,.card,.grid,.grid>*,.pos-layout,.pos-layout>*,.toolbar,.actions,.field,.custom-row,.settings-two-col,.settings-left,.settings-right{min-width:0}
+img,svg,canvas{max-width:100%}
+input,select,textarea,button{max-width:100%}
+.toolbar,.actions{flex-wrap:wrap}
+.toolbar h2,.toolbar h3,.toolbar h4{min-width:0;overflow-wrap:anywhere}
+.table-wrap{width:100%;max-width:100%;overflow:auto;overscroll-behavior:contain}
+.table{min-width:max-content}
+.modal-bg{padding:12px}
+.modal{width:min(680px,calc(100vw - 24px));max-width:100%;max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain}
+.customer-picker-menu{max-width:100%}
+@media(max-width:720px){
+  .content{padding:12px}
+  .card{max-width:100%;padding:12px}
+  .toolbar{align-items:stretch;gap:8px}
+  .toolbar>.search,.toolbar>.actions,.actions>.search{width:100%;max-width:100%}
+  .actions>*{flex:1 1 140px}
+  .modal-bg{padding:8px}
+  .modal{width:calc(100vw - 16px);max-height:calc(100dvh - 16px);padding:14px}
+}
+</style>
 </head>
 
 <body>
 <section id="login">
-  <div class="login-card">
+  <form id="loginForm" class="login-card">
     <div id="loginLogo" class="logo">VN</div>
     <h1 id="loginShop">Velvet Nail Studio</h1>
     <p class="muted">美甲店 POS</p>
     <div class="field"><label>账号</label><input id="loginUser" value="admin"></div>
     <div class="field"><label>密码</label><div class="password-wrap"><input id="loginPass" type="password" value="admin123"><button type="button" id="loginScreenPasswordEye" class="password-eye" aria-label="查看密码" title="查看密码">👁</button></div></div>
-    <button id="loginBtn" class="primary" style="width:100%">登入</button>
+    <button id="loginBtn" type="submit" class="primary" style="width:100%">登入</button>
     <div id="loginError" style="color:#b63f49;font-size:12px;margin-top:8px"></div>
-  </div>
+  </form>
 </section>
 
 <section id="app" class="hidden">
   <aside class="sidebar">
-    <div class="brand"><div id="brandLogo" class="logo">VN</div><div><b id="brandName">Velvet Nail Studio</b><small>POS System</small></div></div>
+    <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="收缩目录" title="收缩目录"><span class="sidebar-arrow" aria-hidden="true"></span></button>
+    <div id="brandHomeButton" class="brand" role="button" tabindex="0" title="返回首页"><div id="brandLogo" class="logo">VN</div><div><b id="brandName">Velvet Nail Studio</b><small>POS System</small></div></div>
     <nav class="nav">
-      <button type="button" data-page="dashboard">⌂ 首页</button>
-      <button type="button" data-page="pos">▣ 收银</button>
-      <button type="button" data-page="appointments">◷ 预约</button>
-      <button type="button" data-page="customers">♙ 顾客</button>
-      <button type="button" data-page="services">✦ 服务</button>
-      <button type="button" data-page="staff">♙ 员工与佣金</button>
+      <button type="button" data-page="dashboard"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3.5 11 12 4l8.5 7"></path><path d="M5.5 9.5V20h13V9.5M9.5 20v-6h5v6"></path></svg></span><span class="nav-label">首页</span></button>
+      <button type="button" data-page="pos"><span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M7 9h10M8 13h3M8 16h3M15 13h1M15 16h1"></path></svg></span><span class="nav-label">收银</span></button>
+      <button type="button" data-page="appointments"><span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="15" rx="2"></rect><path d="M7.5 3.5v4M16.5 3.5v4M3.5 10h17M8 14h2M14 14h2M8 17h2"></path></svg></span><span class="nav-label">预约</span></button>
+      <button type="button" data-page="customers"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3.5 20c.4-4 2.2-6 5.5-6s5.1 2 5.5 6M14 15c3.8-.8 6 1 6.5 5"></path></svg></span><span class="nav-label">顾客</span></button>
+      <button type="button" data-page="services"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="m12 3 1.5 5.5L19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5L12 3Z"></path><path d="m18.5 15 .7 2.3 2.3.7-2.3.7-.7 2.3-.7-2.3-2.3-.7 2.3-.7.7-2.3Z"></path></svg></span><span class="nav-label">服务</span></button>
+      <button type="button" data-page="staff"><span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"></rect><circle cx="9" cy="10" r="2.5"></circle><path d="M6.5 16c.4-2 1.2-3 2.5-3s2.1 1 2.5 3M14 9h3M14 13h3"></path></svg></span><span class="nav-label">员工与佣金</span></button>
       
-      <button type="button" data-page="membership">◇ 会员</button>
-      <button type="button" data-page="reports">▥ 销售报表</button>
-      <button type="button" data-page="settings">⚙ 设置</button>
+      <button type="button" data-page="membership"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="m4 9 4-5h8l4 5-8 11L4 9Z"></path><path d="M4 9h16M8 4l4 5 4-5M12 9v11"></path></svg></span><span class="nav-label">会员</span></button>
+      <button type="button" data-page="reports"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 20V10h4v10M10 20V4h4v16M16 20v-7h4v7M3 20.5h18"></path></svg></span><span class="nav-label">销售报表</span></button>
+      <button type="button" data-page="settings"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.5 1a8 8 0 0 0-2-1.2L14 3h-4l-.4 2.7a8 8 0 0 0-2 1.2l-2.5-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.5-1a8 8 0 0 0 2 1.2L10 21h4l.4-2.7a8 8 0 0 0 2-1.2l2.5 1 2-3.4-2-1.5A7 7 0 0 0 19 12Z"></path></svg></span><span class="nav-label">设置</span></button>
     </nav>
     <div class="sidebar-bottom">
-      <button id="logoutBtn" class="danger">退出</button>
+      <button id="logoutBtn" class="danger"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"></path></svg></span><span class="nav-label">退出</span></button>
     </div>
   </aside>
   <main class="main">
@@ -517,6 +636,7 @@ if(typeof db.settings.databaseKey!=="string")db.settings.databaseKey="";
 if(!db.settings.panelColor)db.settings.panelColor="#f7f0e6";
 if(!db.settings.logoClearedV1){db.settings.logo="";db.settings.logoClearedV1=true;save();}if(!db.settings.logo){db.settings.logo='data:image/png;base64,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';save();}let page="dashboard",searchState={pos:"",customers:"",services:""},discMode="percent",discAmount=0;
 
+let posCategory="manicure";
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||structuredClone(seed)}catch(e){return structuredClone(seed)}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(error){console.error("Local save failed:",error);toast("本机储存空间不足，请使用较小的 Logo")}scheduleRemoteSave()}
 function getDatabaseUrl(){return String(db.settings.googleAppsScriptUrl||"").trim()}
@@ -525,13 +645,19 @@ function scheduleRemoteSave(){if(!getDatabaseUrl()||!getDatabaseKey())return;if(
 function databasePayload(){const customers=JSON.parse(JSON.stringify(db.customers||[]));const sales=(db.sales||[]).map(sale=>({...JSON.parse(JSON.stringify(sale)),staffName:sale.staffName||db.staff.find(staff=>staff.id===sale.staffId)?.name||""}));const settings=JSON.parse(JSON.stringify(db.settings||{}));delete settings.googleAppsScriptUrl;delete settings.databaseKey;return {customers,sales,services:JSON.parse(JSON.stringify(db.services||[])),staff:JSON.parse(JSON.stringify(db.staff||[])),appointments:JSON.parse(JSON.stringify(db.appointments||[])),memberships:JSON.parse(JSON.stringify(db.memberships||[])),settings}}
 async function databaseRequest(action,payload,urlOverride,keyOverride){const url=String(urlOverride||getDatabaseUrl()).trim(),apiKey=String(keyOverride||getDatabaseKey()).trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec(?:\?.*)?$/.test(url))throw new Error("Web App URL 不正确");const response=await fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action,apiKey,payload:payload||null})});if(!response.ok)throw new Error("HTTP "+response.status);const result=await response.json();if(!result.ok)throw new Error(result.error||"Database error");return result}
 async function syncToDatabase(){if(remoteSyncInProgress)return;remoteSyncInProgress=true;clearTimeout(remoteSaveTimer);try{await databaseRequest("save",databasePayload())}catch(error){console.warn("Google Sheet save failed:",error)}finally{remoteSyncInProgress=false;if(remoteSaveQueued){remoteSaveQueued=false;scheduleRemoteSave()}}}
-async function syncFromDatabase(showMessage=false){if(remoteSyncInProgress)return;remoteSyncInProgress=true;try{const result=await databaseRequest("load");if(result.data&&typeof result.data==="object"){if(Array.isArray(result.data.customers))db.customers=result.data.customers;if(Array.isArray(result.data.sales))db.sales=result.data.sales;["services","staff","appointments","memberships"].forEach(key=>{if(Array.isArray(result.data[key]))db[key]=result.data[key];else remoteSaveQueued=true});const remoteSettings=result.data.settings&&typeof result.data.settings==="object"?result.data.settings:{};if(Object.keys(remoteSettings).length){const localUrl=getDatabaseUrl(),localKey=getDatabaseKey();db.settings={...db.settings,...remoteSettings,googleAppsScriptUrl:localUrl,databaseKey:localKey};db.settings.menuVisibility={...MENU_DEFAULTS,...(db.settings.menuVisibility||{})}}else remoteSaveQueued=true;localStorage.setItem(KEY,JSON.stringify(db));render();if(showMessage)toast("Google Sheet 资料和设置已载入")}else{remoteSyncInProgress=false;await syncToDatabase();remoteSyncInProgress=true;if(showMessage)toast("Google Sheet 已连接并建立资料")}}catch(error){console.warn("Google Sheet load failed:",error);if(showMessage)toast("连接失败："+error.message)}finally{remoteSyncInProgress=false;if(remoteSaveQueued){remoteSaveQueued=false;scheduleRemoteSave()}}}
+async function syncFromDatabase(showMessage=false){if(remoteSyncInProgress)return;remoteSyncInProgress=true;try{const result=await databaseRequest("load");if(result.data&&typeof result.data==="object"){if(Array.isArray(result.data.customers))db.customers=result.data.customers;if(Array.isArray(result.data.sales))db.sales=result.data.sales;["services","staff","appointments","memberships"].forEach(key=>{if(Array.isArray(result.data[key]))db[key]=result.data[key];else remoteSaveQueued=true});const remoteSettings=result.data.settings&&typeof result.data.settings==="object"?result.data.settings:{};if(Object.keys(remoteSettings).length){const localUrl=getDatabaseUrl(),localKey=getDatabaseKey();db.settings={...db.settings,...remoteSettings,googleAppsScriptUrl:localUrl,databaseKey:localKey};db.settings.menuVisibility={...MENU_DEFAULTS,...(db.settings.menuVisibility||{})}}else remoteSaveQueued=true;mergeDuplicateCustomers();localStorage.setItem(KEY,JSON.stringify(db));render();if(showMessage)toast("Google Sheet 资料和设置已载入")}else{remoteSyncInProgress=false;await syncToDatabase();remoteSyncInProgress=true;if(showMessage)toast("Google Sheet 已连接并建立资料")}}catch(error){console.warn("Google Sheet load failed:",error);if(showMessage)toast("连接失败："+error.message)}finally{remoteSyncInProgress=false;if(remoteSaveQueued){remoteSaveQueued=false;scheduleRemoteSave()}}}
 function $(q){return document.querySelector(q)} function $$(q){return [...document.querySelectorAll(q)]}
 function money(n){return "RM "+Number(n||0).toFixed(2)}
 function uid(p){return p+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function today(){return new Date().toISOString().slice(0,10)}
 function dateOnly(value){const text=String(value||"").trim();if(!text)return "";const match=text.match(/\b(\d{4})-(\d{2})-(\d{2})\b/);if(match)return `${match[1]}-${match[2]}-${match[3]}`;const date=new Date(text);if(Number.isNaN(date.getTime()))return text;const parts=Object.fromEntries(new Intl.DateTimeFormat("en",{timeZone:"Asia/Kuala_Lumpur",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date).filter(part=>part.type!=="literal").map(part=>[part.type,part.value]));return `${parts.year}-${parts.month}-${parts.day}`}
+function customerNameKey(value){return String(value||"").trim().replace(/\s+/g," ").toLocaleLowerCase()}
+function customerPhoneKey(value){return String(value||"").replace(/\D/g,"")}
+function findMatchingCustomer(name,phone,excludeId=""){const nk=customerNameKey(name),pk=customerPhoneKey(phone);return (db.customers||[]).find(c=>c.id!==excludeId&&((nk&&customerNameKey(c.name)===nk)||(pk&&customerPhoneKey(c.phone)===pk)))||null}
+function mergeCustomerInto(target,source){if(!target||!source||target.id===source.id)return target;target.name=target.name||source.name;target.phone=target.phone||source.phone;target.history=[...(target.history||[]),...(source.history||[])];target.visits=(Number(target.visits)||0)+(Number(source.visits)||0);target.spend=(Number(target.spend)||0)+(Number(source.spend)||0);(db.sales||[]).forEach(x=>{if(x.customerId===source.id)x.customerId=target.id});(db.appointments||[]).forEach(x=>{if(x.customerId===source.id)x.customerId=target.id});db.customers=db.customers.filter(c=>c.id!==source.id);return target}
+function mergeDuplicateCustomers(){const customers=[...(db.customers||[])];customers.forEach(c=>{if(!db.customers.includes(c))return;const match=findMatchingCustomer(c.name,c.phone,c.id);if(match)mergeCustomerInto(match,c)})}
+mergeDuplicateCustomers();
 function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.remove("hidden");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.add("hidden"),1800)}
 async function login(){
   if(getDatabaseUrl()&&getDatabaseKey())await syncFromDatabase(false);
@@ -541,6 +667,8 @@ async function login(){
     $("#login").classList.add("hidden");
     $("#app").classList.remove("hidden");
     $("#loginError").textContent="";
+    localStorage.setItem("glowith_session_active","1");
+    localStorage.setItem("glowith_last_activity",String(Date.now()));
     render();
   }else{
     $("#loginError").textContent="账号或密码不对";
@@ -571,28 +699,10 @@ pos(){return `<div class="pos-layout">
     <input id="posSearch" class="search" placeholder="搜索服务" value="${esc(searchState.pos)}">
   </div>
 
-  <div class="category-columns">
-    <div class="category-panel">
-      <h3>Manicure 手部</h3>
-      <div id="manicureGrid" class="service-grid">
-        ${serviceCards(db.services.filter(x=>isManicure(x)&&(x.name+" "+x.category).toLowerCase().includes(searchState.pos.toLowerCase())))}
-      </div>
-    </div>
-
-    <div class="category-panel">
-      <h3>Pedicure 脚部</h3>
-      <div id="pedicureGrid" class="service-grid">
-        ${serviceCards(db.services.filter(x=>isPedicure(x)&&(x.name+" "+x.category).toLowerCase().includes(searchState.pos.toLowerCase())))}
-      </div>
-    </div>
+  <div class="pos-category-tabs" role="tablist" aria-label="Service category">
+    ${[["manicure","Manicure"],["pedicure","Pedicure"],["other","Other"]].map(([key,label])=>`<button type="button" class="pos-category-tab" data-pos-category="${key}" role="tab" aria-selected="${posCategory===key}">${label}</button>`).join("")}
   </div>
-
-  <div class="other-panel">
-    <h3>其他服务</h3>
-    <div id="otherServiceGrid" class="service-grid">
-      ${serviceCards(db.services.filter(x=>!isManicure(x)&&!isPedicure(x)&&(x.name+" "+x.category).toLowerCase().includes(searchState.pos.toLowerCase())))}
-    </div>
-  </div>
+  <div id="posCategoryServiceList" class="pos-category-service-list">${categoryServiceRows(posCategoryServices())}</div>
 
   <div class="custom-panel">
     <div class="toolbar"><h3>临时项目</h3></div>
@@ -607,7 +717,7 @@ pos(){return `<div class="pos-layout">
 <div class="card">
   <div class="toolbar"><h3>订单</h3><button id="clearCartBtn" class="btn" type="button">清除</button></div>
   <div id="cartItems">${cartHtml()}</div>
-  <div class="field"><label>顾客</label><input id="customerPicker" list="customerList" placeholder="搜索顾客名字或电话"><datalist id="customerList">${db.customers.map(c=>`<option value="${esc(c.name)} — ${esc(c.phone)}"></option>`).join("")}</datalist></div>
+  <div class="field"><label>顾客</label><div class="customer-picker-wrap"><input id="customerPicker" autocomplete="off" placeholder="搜索顾客名字或电话"><div id="customerPickerMenu" class="customer-picker-menu hidden"></div></div></div>
   <div class="field"><label>员工</label><select id="staffPicker">${db.staff.filter(s=>s.active).map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("")}</select></div>
   <div class="field"><label>折扣</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><select id="discMode"><option value="percent">百分比 %</option><option value="fixed">固定 RM</option><option value="deposit">Deposit RM</option></select><input id="discAmount" type="number" min="0" step=".01" value="${discAmount}"></div></div>
   <div class="field"><label>付款</label><select id="payment"><option>现金</option><option>刷卡</option><option>QR Pay</option><option>电子钱包</option></select></div>
@@ -680,11 +790,14 @@ function bindPage(){
   $$("[data-page]").forEach(b=>b.onclick=()=>go(b.dataset.page));
   if($("#posSearch"))$("#posSearch").oninput=e=>{
     searchState.pos=e.target.value;
-    const q=searchState.pos.toLowerCase();
-    if($("#manicureGrid"))$("#manicureGrid").innerHTML=serviceCards(db.services.filter(x=>isManicure(x)&&(x.name+" "+x.category).toLowerCase().includes(q)));
-    if($("#pedicureGrid"))$("#pedicureGrid").innerHTML=serviceCards(db.services.filter(x=>isPedicure(x)&&(x.name+" "+x.category).toLowerCase().includes(q)));
-    if($("#otherServiceGrid"))$("#otherServiceGrid").innerHTML=serviceCards(db.services.filter(x=>!isManicure(x)&&!isPedicure(x)&&(x.name+" "+x.category).toLowerCase().includes(q)));
+    refreshPosCategoryServices();
   };
+  setupCustomerPicker("customerPicker","customerPickerMenu",false);
+  $$('[data-pos-category]').forEach(btn=>btn.onclick=()=>{
+    posCategory=btn.dataset.posCategory;
+    $$('[data-pos-category]').forEach(tab=>tab.setAttribute('aria-selected',String(tab===btn)));
+    refreshPosCategoryServices();
+  });
   if($("#customerSearch"))$("#customerSearch").oninput=e=>{searchState.customers=e.target.value;$("#customerRows").innerHTML=customerRows(db.customers.filter(c=>(c.name+" "+c.phone+" "+(c.email||"")).toLowerCase().includes(searchState.customers.toLowerCase())))};
   if($("#serviceSearch"))$("#serviceSearch").oninput=e=>{searchState.services=e.target.value;$("#serviceRows").innerHTML=serviceRows(db.services.filter(x=>(x.name+" "+x.category).toLowerCase().includes(searchState.services.toLowerCase())))};
   if($("#discMode")){$("#discMode").value=discMode;$("#discMode").onchange=e=>{discMode=e.target.value;refreshTotals()}};
@@ -751,6 +864,17 @@ function isPedicure(s){
   const v=((s.category||"")+" "+(s.name||"")).toLowerCase();
   return v.includes("pedicure")||v.includes("脚")||v.includes("足");
 }
+function posCategoryServices(){
+  const q=searchState.pos.toLowerCase();
+  return db.services.filter(s=>{
+    if(!(s.name+" "+s.category).toLowerCase().includes(q))return false;
+    if(posCategory==="manicure")return isManicure(s);
+    if(posCategory==="pedicure")return isPedicure(s);
+    return !isManicure(s)&&!isPedicure(s);
+  });
+}
+function categoryServiceRows(list){return list.map(s=>`<button type="button" class="pos-service-row" onclick="addToCart('${s.id}')"><span class="pos-service-copy"><b>${esc(s.name)}</b><small>${esc(s.category)}</small></span><span class="price">${money(s.price)}</span></button>`).join("")||`<div class="empty" style="grid-column:1/-1">暂无数据</div>`}
+function refreshPosCategoryServices(){const box=$("#posCategoryServiceList");if(box)box.innerHTML=categoryServiceRows(posCategoryServices())}
 function addCustomService(){
   const name=($("#customServiceName")?.value||"").trim();
   const price=Number($("#customServicePrice")?.value||0);
@@ -774,6 +898,24 @@ function refreshTotals(){if($("#totals"))$("#totals").innerHTML=totalsHtml()}
 function addToCart(id){const svc=db.services.find(s=>s.id===id);if(!svc)return;let x=db.cart.find(i=>i.id===id);if(x)x.qty++;else db.cart.push({id:svc.id,name:svc.name,price:svc.price,qty:1});save();refreshCart();toast("已加进订单")}
 function changeQty(id,n){let x=db.cart.find(i=>i.id===id);if(!x)return;x.qty+=n;if(x.qty<=0)db.cart=db.cart.filter(i=>i.id!==id);save();refreshCart()}
 function findCustomerId(text){if(!text)return"";const c=db.customers.find(c=>text===c.name+" — "+c.phone||text===c.name);return c?c.id:null}
+function setupCustomerPicker(inputId,menuId,fillPhone){
+  const input=$("#"+inputId),menu=$("#"+menuId);
+  if(!input||!menu)return;
+  const draw=()=>{
+    const q=String(input.value||"").trim().toLocaleLowerCase();
+    const digits=customerPhoneKey(q);
+    const rows=db.customers.filter(c=>!q||customerNameKey(c.name).includes(q)||(digits&&customerPhoneKey(c.phone).includes(digits))).slice(0,10);
+    menu.innerHTML=rows.map(c=>`<button type="button" class="customer-picker-option" data-customer-id="${c.id}"><b>${esc(c.name)}</b><small>${esc(c.phone||"")}</small></button>`).join("")||`<div class="customer-picker-empty">找不到顾客，可直接输入新名字</div>`;
+    menu.classList.remove("hidden");
+    menu.querySelectorAll("[data-customer-id]").forEach(option=>{
+      option.onmousedown=e=>e.preventDefault();
+      option.onclick=()=>{const c=db.customers.find(x=>x.id===option.dataset.customerId);if(!c)return;input.value=fillPhone?c.name:`${c.name} — ${c.phone||""}`;if(fillPhone&&$("#mPhone"))$("#mPhone").value=c.phone||"";menu.classList.add("hidden")};
+    });
+  };
+  input.onfocus=draw;
+  input.oninput=draw;
+  input.onblur=()=>setTimeout(()=>menu.classList.add("hidden"),130);
+}
 function checkout(){if(!db.cart.length)return toast("请先加服务");const cid=findCustomerId($("#customerPicker").value);if(cid===null)return toast("请选择顾客");const sub=cartSubtotal(),d=discountValue(),deposit=depositValue(),total=sub-d-deposit;const sale={id:uid("sale"),date:today(),time:new Date().toTimeString().slice(0,5),customerId:cid,staffId:$("#staffPicker").value,payment:$("#payment").value,items:db.cart.map(x=>({...x})),subtotal:sub,discount:d,deposit,total,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};db.sales.push(sale);if(cid){const c=db.customers.find(c=>c.id===cid);c.visits=(c.visits||0)+1;c.spend=(c.spend||0)+total}db.cart=[];discAmount=0;discMode="percent";save();toast("收款已保存");go("reports")}
 
 
@@ -907,7 +1049,7 @@ function editCustomer(id){
   const c=id?db.customers.find(x=>x.id===id):{name:"",phone:"",visits:0,spend:0,history:[]};
   const isNew=!id;
   modal(id?"修改顾客":"加顾客",`<div class="grid g2">
-    <div class="field"><label>名字</label><input id="mName" value="${esc(c.name||"")}"></div>
+    <div class="field"><label>名字</label><div class="customer-picker-wrap"><input id="mName" autocomplete="off" placeholder="输入或搜索顾客名字" value="${esc(c.name||"")}"><div id="mNameMenu" class="customer-picker-menu hidden"></div></div></div>
     <div class="field"><label>电话</label><input id="mPhone" value="${esc(c.phone||"")}"></div>
     ${isNew?`
     <div class="field"><label>服务项目名称</label><input id="mHistoryService" placeholder="手动输入服务项目"></div>
@@ -921,7 +1063,9 @@ function editCustomer(id){
     const phone=$("#mPhone").value.trim();
     if(!name)return toast("请输入名字");
     if(id){
+      const duplicate=findMatchingCustomer(name,phone,id);
       Object.assign(c,{name,phone});
+      if(duplicate)mergeCustomerInto(duplicate,c);
     }else{
       const service=($("#mHistoryService")?.value||"").trim();
       const artist=($("#mHistoryArtist")?.value||"").trim();
@@ -929,10 +1073,13 @@ function editCustomer(id){
       const amount=Math.max(0,Number($("#mHistoryAmount")?.value||0));
       const remark=($("#mHistoryRemark")?.value||"").trim();
       const history=(service||artist||amount||remark)?[{id:uid("vh"),service,artist,date,amount,remark}]:[];
-      db.customers.push({id:uid("c"),name,phone,visits:history.length,spend:amount,history});
+      const existing=findMatchingCustomer(name,phone);
+      if(existing){existing.name=existing.name||name;existing.phone=existing.phone||phone;existing.history=[...(existing.history||[]),...history];existing.visits=(existing.visits||0)+history.length;existing.spend=(existing.spend||0)+amount;toast("已加入现有顾客记录")}else db.customers.push({id:uid("c"),name,phone,visits:history.length,spend:amount,history});
     }
+    mergeDuplicateCustomers();
     save();$("#modalRoot").innerHTML="";render();
   });
+  setTimeout(()=>setupCustomerPicker("mName","mNameMenu",true),0);
 }
 
 function addCustomerVisit(customerId){
@@ -970,7 +1117,25 @@ function deleteCustomerVisit(customerId,visitId){
   c.history=(c.history||[]).filter(x=>x.id!==visitId);
   save();openCustomerHistory(customerId);
 }
-function editService(id){const x=id?db.services.find(s=>s.id===id):{name:"",category:"Manicure",price:0};modal(id?"修改服务":"加服务",`<div class="grid g2"><div class="field"><label>服务名字</label><input id="mName" value="${esc(x.name)}"></div><div class="field"><label>分类</label><input id="mCat" value="${esc(x.category)}"></div><div class="field"><label>价钱</label><input id="mPrice" type="number" step=".01" value="${x.price}"></div></div>`,()=>{if(id)Object.assign(x,{name:$("#mName").value,category:$("#mCat").value,price:+$("#mPrice").value||0});else db.services.push({id:uid("s"),name:$("#mName").value,category:$("#mCat").value,price:+$("#mPrice").value||0});save();$("#modalRoot").innerHTML="";render()})}
+function editService(id){
+  const x=id?db.services.find(s=>s.id===id):{name:"",category:"Manicure",price:0};
+  const categories=[...new Set(db.services.map(s=>String(s.category||"").trim()).filter(Boolean))];
+  if(x.category&&!categories.includes(x.category))categories.push(x.category);
+  modal(id?"修改服务":"加服务",`<div class="grid g2">
+    <div class="field"><label>服务名字</label><input id="mName" value="${esc(x.name)}"></div>
+    <div class="field"><label>分类</label><select id="mCatSelect">${categories.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}<option value="__new__">+ 添加新分类</option></select><input id="mNewCat" class="hidden" style="margin-top:7px" placeholder="输入新分类"></div>
+    <div class="field"><label>价钱</label><input id="mPrice" type="number" min="0" step=".01" value="${x.price}"></div>
+  </div>`,()=>{
+    const name=$("#mName").value.trim();
+    const category=$("#mCatSelect").value==="__new__"?$("#mNewCat").value.trim():$("#mCatSelect").value;
+    if(!name)return toast("请输入服务名称");
+    if(!category)return toast("请选择或输入分类");
+    const o={name,category,price:+$("#mPrice").value||0};
+    if(id)Object.assign(x,o);else db.services.push({id:uid("s"),...o});
+    save();$("#modalRoot").innerHTML="";render();
+  });
+  setTimeout(()=>{const select=$("#mCatSelect"),input=$("#mNewCat");if(!select||!input)return;select.value=categories.includes(x.category)?x.category:(categories[0]||"__new__");const update=()=>input.classList.toggle("hidden",select.value!=="__new__");select.onchange=()=>{update();if(select.value==="__new__")input.focus()};update()},0);
+}
 function editStaff(id){const x=id?db.staff.find(s=>s.id===id):{name:"",role:"Nail Artist",commission:10,active:true};modal(id?"修改员工":"加员工",`<div class="grid g2"><div class="field"><label>名字</label><input id="mName" value="${esc(x.name)}"></div><div class="field"><label>职位</label><input id="mRole" value="${esc(x.role)}"></div><div class="field"><label>佣金 %</label><input id="mCom" type="number" value="${x.commission}"></div><div class="field"><label>状态</label><select id="mActive"><option value="1">使用中</option><option value="0">已停用</option></select></div></div>`,()=>{const o={name:$("#mName").value,role:$("#mRole").value,commission:+$("#mCom").value||0,active:$("#mActive").value==="1"};if(id)Object.assign(x,o);else db.staff.push({id:uid("st"),...o});save();$("#modalRoot").innerHTML="";render()});setTimeout(()=>{$("#mActive").value=x.active?"1":"0"},0)}
 function editInventory(id){const x=id?db.inventory.find(i=>i.id===id):{name:"",sku:"",stock:0,min:5,cost:0};modal(id?"编辑库存":"新增库存",`<div class="grid g2"><div class="field"><label>名称</label><input id="mName" value="${esc(x.name)}"></div><div class="field"><label>SKU</label><input id="mSku" value="${esc(x.sku)}"></div><div class="field"><label>库存</label><input id="mStock" type="number" value="${x.stock}"></div><div class="field"><label></label><input id="mMin" type="number" value="${x.min}"></div><div class="field"><label>成本</label><input id="mCost" type="number" step=".01" value="${x.cost}"></div></div>`,()=>{const o={name:$("#mName").value,sku:$("#mSku").value,stock:+$("#mStock").value||0,min:+$("#mMin").value||0,cost:+$("#mCost").value||0};if(id)Object.assign(x,o);else db.inventory.push({id:uid("i"),...o});save();$("#modalRoot").innerHTML="";render()})}
 function editMembership(id){const x=id?db.memberships.find(m=>m.id===id):{name:"",price:0,discount:5};modal(id?"修改会员配套":"加会员配套",`<div class="grid g2"><div class="field"><label>配套名字</label><input id="mName" value="${esc(x.name)}"></div><div class="field"><label>价钱</label><input id="mPrice" type="number" value="${x.price}"></div><div class="field"><label>折扣 %</label><input id="mDiscount" type="number" value="${x.discount}"></div></div>`,()=>{const o={name:$("#mName").value,price:+$("#mPrice").value||0,discount:+$("#mDiscount").value||0};if(id)Object.assign(x,o);else db.memberships.push({id:uid("m"),...o});save();$("#modalRoot").innerHTML="";render()})}
@@ -1007,7 +1172,7 @@ function openDatabaseSettings(){modal("Google Sheet Database",`<div class="field
 function exportCSV(){const rows=[["日期","时间","顾客","付款","小计","折扣","Deposit","总额"],...db.sales.map(s=>[s.date,s.time,db.customers.find(c=>c.id===s.customerId)?.name||"散客",s.payment,s.subtotal,s.discount||0,s.deposit||0,s.total])];const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="sales.csv";a.click()}
 
 document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();go(b.dataset.page)}});
-$("#loginBtn").onclick=login;$("#logoutBtn").onclick=logout;
+$("#loginForm").onsubmit=e=>{e.preventDefault();login()};$("#logoutBtn").onclick=logout;
 $("#loginScreenPasswordEye").onclick=()=>{const input=$("#loginPass"),eye=$("#loginScreenPasswordEye"),showing=input.type==="text";input.type=showing?"password":"text";eye.textContent=showing?"👁":"🙈";eye.title=showing?"查看密码":"隐藏密码";eye.setAttribute("aria-label",eye.title)};
 render();
 setTimeout(()=>{if(getDatabaseUrl()&&getDatabaseKey())syncFromDatabase(false)},0);
@@ -1555,6 +1720,40 @@ setTimeout(()=>{if(getDatabaseUrl()&&getDatabaseKey())syncFromDatabase(false)},0
   // This is the important part for Refresh / Reload:
   // Restore the same page while the adjustable inactivity session is valid.
   restoreSession();
+})();
+</script>
+
+<script id="collapsible-sidebar-js">
+(function(){
+  const key="glowith_sidebar_collapsed";
+  const button=document.getElementById("sidebarToggle");
+  if(!button)return;
+  function apply(collapsed){
+    document.body.classList.toggle("sidebar-collapsed",collapsed);
+    button.innerHTML='<span class="sidebar-arrow" aria-hidden="true"></span>';
+    button.setAttribute("aria-expanded",String(!collapsed));
+    button.title=collapsed?"展开目录":"收缩目录";
+  }
+  apply(localStorage.getItem(key)==="1");
+  button.addEventListener("click",function(){
+    const collapsed=!document.body.classList.contains("sidebar-collapsed");
+    localStorage.setItem(key,collapsed?"1":"0");
+    apply(collapsed);
+  });
+  const brand=document.getElementById("brandHomeButton");
+  if(brand){
+    const home=()=>{if(typeof go==="function")go("dashboard")};
+    brand.addEventListener("click",home);
+    brand.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();home()}});
+  }
+  [document.getElementById("loginUser"),document.getElementById("loginPass")].filter(Boolean).forEach(input=>{
+    input.addEventListener("keydown",e=>{
+      if(e.key!=="Enter")return;
+      e.preventDefault();
+      const loginButton=document.getElementById("loginBtn");
+      if(loginButton&&!loginButton.disabled)loginButton.click();
+    });
+  });
 })();
 </script>
 
