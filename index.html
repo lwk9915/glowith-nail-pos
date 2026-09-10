@@ -477,7 +477,7 @@ body.sidebar-collapsed .main{width:calc(100% - 76px)}
 .sidebar .nav button,.sidebar-bottom button{display:flex;align-items:center;gap:8px;box-sizing:border-box;width:100%;height:42px;min-height:42px;padding:0 11px!important;font-size:14px!important;line-height:1.2!important}
 body.sidebar-collapsed .sidebar .nav button{height:42px;min-height:42px;padding:0 6px!important}
 .topbar{justify-content:flex-start}.topbar h2{margin-right:auto}
-.nav-icon{display:inline-flex;width:22px;flex:0 0 22px;align-items:center;justify-content:center}.nav-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nav-label{display:inline}
+.nav-icon{display:inline-flex;width:22px;flex:0 0 22px;align-items:center;justify-content:center}.nav-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nav-label{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 body.sidebar-collapsed .sidebar{width:76px;padding-inline:10px}
 body.sidebar-collapsed .main{margin-left:76px}
 body.sidebar-collapsed .brand{box-sizing:border-box;width:56px;max-width:56px;padding:2px 0 20px;justify-content:center;gap:0;overflow:visible}
@@ -561,6 +561,31 @@ input,select,textarea,button{max-width:100%}
   .modal-bg{padding:8px}
   .modal{width:calc(100vw - 16px);max-height:calc(100dvh - 16px);padding:14px}
 }
+@media(min-width:721px) and (max-width:1100px){
+  .sidebar{width:178px!important;padding:14px 10px!important}
+  .main{width:calc(100% - 178px)!important;margin-left:178px!important}
+  body.sidebar-collapsed .sidebar{width:76px!important;padding-inline:10px!important}
+  body.sidebar-collapsed .main{width:calc(100% - 76px)!important;margin-left:76px!important}
+  .topbar{height:60px!important;min-height:60px!important;padding:0 16px!important}
+  .content{height:calc(100dvh - 60px)!important;max-height:calc(100dvh - 60px)!important;padding:12px!important}
+  .brand{padding:2px 4px 14px!important}
+  .sidebar .nav button{padding-inline:8px!important}
+  .card{padding:13px}
+  .pos-layout{grid-template-columns:minmax(0,1fr)!important;gap:12px}
+  body.is-ipad-device[data-pos-page="pos"] .pos-layout{grid-template-columns:minmax(0,1.35fr) minmax(230px,.85fr)!important;align-items:stretch}
+  body.is-ipad-device[data-pos-page="pos"] .pos-layout>.card{height:100%;min-height:0;overflow-y:auto}
+  body[data-pos-page="pos"] .pos-category-service-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:0 7px}
+  body[data-pos-page="pos"] .pos-service-row{padding-inline:6px;gap:6px}
+  body[data-pos-page="pos"] .pos-service-copy b{font-size:11px}
+  body[data-pos-page="pos"] .pos-service-row .price{font-size:11px}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(min-width:721px) and (max-width:899px){
+  body.is-ipad-device[data-pos-page="pos"] .pos-category-service-list{grid-template-columns:1fr}
+}
+@media(min-width:900px) and (max-width:1100px){
+  body.is-ipad-device[data-pos-page="pos"] .pos-category-service-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 </style>
 </head>
 
@@ -607,6 +632,7 @@ input,select,textarea,button{max-width:100%}
 <div id="toast" class="hidden" style="position:fixed;right:20px;bottom:20px;background:#2d2427;color:#fff;padding:12px 15px;border-radius:10px;z-index:100"></div>
 
 <script>
+document.body.classList.toggle("is-ipad-device",/iPad/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1));
 const KEY="velvet_nail_pos_v14";
 const seed={
  settings:{shop:"Velvet Nail Studio",color:"#c85d78",fontColor:"#000000",fontWeight:"400",logo:"",username:"admin",password:"admin123"},
