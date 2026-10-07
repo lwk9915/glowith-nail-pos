@@ -2283,5 +2283,58 @@ input,select,textarea,button{max-width:100%}
   suppressBrowserHistory();
 })();
 </script>
+
+<script id="customer-cloud-delete-fix">
+(function(){
+  const CUSTOMER_DELETE_VERSION="customer-cloud-delete-v2";
+
+  async function persistCustomerDelete(id){
+    if(!id || typeof db==="undefined") return false;
+
+    // 本地先删除
+    db.customers = (db.customers||[]).filter(c=>String(c.id)!==String(id));
+
+    // 使用现有 save()，由当前版本自己的 Google Sheets 同步机制负责写入
+    if(typeof save==="function") save();
+
+    // 如果当前版本有远程保存函数，等待它完成
+    if(typeof remoteSave==="function"){
+      try{
+        await remoteSave();
+      }catch(e){}
+    }
+
+    if(typeof render==="function") render();
+    return true;
+  }
+
+  window.deleteCustomerPersisted = async function(id){
+    const c=(db.customers||[]).find(x=>String(x.id)===String(id));
+    if(!c) return;
+
+    if(!confirm("确定要删除顾客「"+(c.name||"")+"」吗？")) return;
+
+    await persistCustomerDelete(id);
+    if(typeof toast==="function") toast("顾客已删除并保存");
+  };
+
+  // 接管现有 customers 删除入口，不影响其他资料删除。
+  const oldDeleteRecord=window.deleteRecord;
+  if(typeof oldDeleteRecord==="function"){
+    window.deleteRecord=function(type,id){
+      if(type==="customers"){
+        return window.deleteCustomerPersisted(id);
+      }
+      return oldDeleteRecord.apply(this,arguments);
+    };
+  }
+
+  const oldDeleteCustomer=window.deleteCustomer;
+  window.deleteCustomer=function(id){
+    return window.deleteCustomerPersisted(id);
+  };
+})();
+</script>
+
 </body>
 </html>
